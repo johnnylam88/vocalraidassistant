@@ -71,7 +71,10 @@ local dbDefaults = {
 		path = "VocalRaidAssistant\\Voice_enUS",
 		throttle = 0,
 		smartDisable = false,
-		
+		spells = {},
+		spellsO = {},
+		spellsB = {},
+		dataLock = true,
 		
 		barX = GetScreenWidth()-200,
 		barY = GetScreenHeight(),
@@ -313,6 +316,16 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
 					},
+					header8 = {
+							order = -16,
+							type = "header",
+							name = "1.0.8",
+					},
+					desc8 = {
+						order	= -15,
+						type	= "description",
+						name	= L["1.0.8 Changelog"],
+					},
 					header7 = {
 							order = -14,
 							type = "header",
@@ -402,6 +415,7 @@ function VocalRaidAssistant:OnEnable()
 	if not VRA_LANGUAGE[vradb.path] then vradb.path = VRA_LOCALEPATH[GetLocale()] end
 	self.throttled = {}
 	self.smarter = 0
+	self:InitDB()
 end
 
 function VocalRaidAssistant:OnDisable()
@@ -429,9 +443,9 @@ function VocalRaidAssistant:PLAYER_ENTERING_WORLD()
 end
 
 function VocalRaidAssistant:isTankSpec(name)
-
+	local spec = UnitGroupRolesAssigned(name)
 	for i=1,5 do
-		if GetInspectSpecialization(name)==tankSpecs[i] then
+		if spec=="TANK" then
 			return true
 		end
 	end
@@ -575,7 +589,7 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	elseif (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
 		if(not vradb.buffAppliedSpecific) then
 			if(vradb.onlyRaidGroup) then
-				if(UnitInRaid(destName) or UnitInParty(destName)) then
+				if(UnitInRaid(destName)~=nil or UnitInParty(destName)~=nil) then
 					if(vradb.buffAppliedTank) then
 						if(self:isTankSpec(destName)) then
 							self:PlaySpell("auraApplied", spellID)
@@ -654,7 +668,7 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				self:PlaySpell("castSuccess", spellID)
 			end
 		end
-	elseif (event == "SPELL_INTERRUPT" and desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and not vradb.interrupt) then 
+	elseif (event == "SPELL_INTERRUPT" and (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] or desttype[COMBATLOG_FILTER_HOSTILE_UNITS]) and not vradb.interrupt) then 
 		if(vradb.onlyRaidGroup) then
 				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
 					self:PlaySpell ("friendlyInterrupt", spellID)

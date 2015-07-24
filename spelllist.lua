@@ -1,4 +1,234 @@
-﻿function VocalRaidAssistant:GetSpellList ()
+﻿function VocalRaidAssistant:GetBarData() 
+	return {
+	
+		[51052] = {
+			desc = "",
+			type = "premade",
+			class = "DEATH KNIGHT",
+			cd = 2*60,
+		},
+		[740] = {
+			desc = "",
+			type = "premade",
+			class = "DRUID",
+			cd = 8*60,
+		},
+		[115213] = {
+			desc = "",
+			type = "premade",
+			class = "MONK",
+			cd = 3*60,
+		},
+		[115310] = {
+			desc = "",
+			type = "premade",
+			class = "MONK",
+			cd = 3*60,
+		},
+		[31821] = {
+			desc = "",
+			type = "premade",
+			class = "PALADIN",
+			cd = 3*60,
+		},
+		[64843] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			cd = 3*60,
+		},
+		[64901] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			cd = 6*60,
+		},
+		[62618] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			cd = 3*60,
+		},
+		[15286] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			cd = 3*60,
+		},
+		[76577] = {
+			desc = "",
+			type = "premade",
+			class = "ROGUE",
+			cd = 3*60,
+		},
+		[108280] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			cd = 3*60,
+		},
+		[98008] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			cd = 3*60,
+		},
+		[16190] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			cd = 3*60,
+		},
+		[97462] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			cd = 3*60,
+		},
+		[114203] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			cd = 3*60,
+		},
+	}
+end
+
+function VocalRaidAssistant:GetBarDataO() 
+	return {
+	
+		[114207] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			duration = 10,
+		},
+		[120668] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 10,
+		},
+		[90355] = {
+			desc = "",
+			type = "premade",
+			class = "HUNTER",
+			duration = 40,
+		},
+		[80353] = {
+			desc = "",
+			type = "premade",
+			class = "MAGE",
+			duration = 40,
+		},
+		[2825] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 40,
+		},
+		[32182] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 40,
+		},
+		[64382] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			duration = 10,
+		},
+	}
+end	
+
+function VocalRaidAssistant:GetBarDataB() 
+	return {
+	
+		[51052] = {
+			desc = "",
+			type = "premade",
+			class = "DEATH KNIGHT",
+			duration = 3,
+		},
+		[740] = {
+			desc = "",
+			type = "premade",
+			class = "DRUID",
+			duration = 8,
+		},
+		[115213] = {
+			desc = "",
+			type = "premade",
+			class = "MONK",
+			duration = 6,
+		},
+		[31821] = {
+			desc = "",
+			type = "premade",
+			class = "PALADIN",
+			duration = 6,
+		},
+		[64843] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			duration = 8,
+		},
+		[62618] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			duration = 10,
+		},
+		[15286] = {
+			desc = "",
+			type = "premade",
+			class = "PRIEST",
+			duration = 15,
+		},
+		[76577] = {
+			desc = "",
+			type = "premade",
+			class = "ROGUE",
+			duration = 5,
+		},
+		[108280] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 10,
+		},
+		[98008] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 6,
+		},
+		[16190] = {
+			desc = "",
+			type = "premade",
+			class = "SHAMAN",
+			duration = 16,
+		},
+		[97462] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			duration = 10,
+		},
+		[114203] = {
+			desc = "",
+			type = "premade",
+			class = "WARRIOR",
+			duration = 15,
+		},
+	}
+end	
+		
+
+
+function VocalRaidAssistant:GetSpellList ()
 	return {
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
