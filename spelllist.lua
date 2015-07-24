@@ -93,14 +93,12 @@ function VocalRaidAssistant:GetSpellList ()
 			
 			--mage
 			[80353] = "timewarp",
-			[159916] = "amplifymagic",
 			--dk
 			[51052] = "antiMagicZone",
 			[61999] = "raiseally",
 			[108199] = "gorefiendsgrasp",
 			--hunter
 			[90355] = "ancienthysteria",
-			[172106] = "aspectofthefox",
 			--warlock
 			[20707] = "soulstone",
 			-- monk
