@@ -1,3 +1,6 @@
+Version 1.0.9
+Fixed a bug where you could not move the Cooldownbar
+Now cooldowns that reset on boss kill/wipe will be reset on Cooldownbar
 Version 1.0.8
 Fixed a bug where Interrupting enemy target would not activate the proper sound
 Added option to customize spells shown on ALL the bars!

@@ -1161,12 +1161,12 @@ function VRA:MoveBar(name,duration)
 		
 		
 		
-		local TWO_THIRD = 2*duration /3
 		local t = duration
+		local HALF_POINT = duration / 2
 		activeBarsArray[activeBars]:SetScript("OnUpdate", function(bar, elapsed)
 			t = t - elapsed
 			bar:SetValue(t)
-			if t > TWO_THIRD then
+			if t > HALF_POINT then
 				bar:SetStatusBarColor(1, t / duration, 0)
 			else
 				bar:SetStatusBarColor(1 - (t / duration), 1, 0)
@@ -1423,6 +1423,31 @@ function VRA:ClearBars()
 	activeMove = 0
 
 end
+
+function VocalRaidAssistant:bossWipe()
+	--Clearing cooldowns
+	for i,j in pairs(playerSpell) do
+		if(spellCooldowns(playerSpell[i])~=nil and spellCooldowns(playerSpell[i])>=5*60) then
+			playerSpell[i]=""
+		end
+	end
+	local count = 0
+	for i=1,activeBars do
+		local _,max1 = activeBarsArray[i]:GetMinMaxValues()
+		if(max1>5*60) then
+			activeBarsArray[i]:Hide()
+			count = count + 1
+		end
+		activeBarsArray[i] = activeBarsArray[i+count]
+	end
+		
+		activeBars = activeBars-count
+		VRA:modifyBars()
+	locked = false
+	activeMove = 0
+
+end
+
 
 function VRA:ClearBBars()
 	--Clearing cooldowns
@@ -2270,11 +2295,11 @@ function VRA:OnOptionCreate()
 						order = 2,
 						disabled = function() if(vradb.enableCooldownBar) then return false else VRA:ClearBars() return true end end,
 						func = function() 
-							--VRA:MoveBar("COOLDOWN BAR!",20)
-							vradb.spells["29166"] = newSpellTable()
-							self:AddDataOption("29166")
-							vradb.spells["1022"] = newSpellTable()
-							self:AddDataOption("1022")
+							VRA:MoveBar("COOLDOWN BAR!",20)
+							--vradb.spells["29166"] = newSpellTable()
+							--self:AddDataOption("29166")
+							--vradb.spells["1022"] = newSpellTable()
+							--self:AddDataOption("1022")
 							--VRA:CreateBar("Damista","97462")
 							--VRA:CreateBar("Nítrak","97462")
 							--VRA:CreateBar("Zørg-TheMaelstrom","97462")

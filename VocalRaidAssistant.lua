@@ -9,6 +9,8 @@ local VRA_TEXT = "VocalRaidAssistant"
 local VRA_VERSION = " " .. GetAddOnMetadata("VocalRaidAssistant", "Version")
 local VRA_AUTHOR = " updated by Nitrak"
 local tankSpecs = {250,104,268,66,73} --Blood DK, Guardian, Brewmaster, Prot Pala, Prot Warr
+local bossesAlive = {}
+local killBoss = false
 --local test = 0
 
 local VRA_LOCALEPATH = {
@@ -316,6 +318,16 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
 					},
+					header9 = {
+							order = -18,
+							type = "header",
+							name = "1.0.9",
+					},
+					desc9 = {
+						order	= -17,
+						type	= "description",
+						name	= L["1.0.9 Changelog"],
+					},
 					header8 = {
 							order = -16,
 							type = "header",
@@ -547,6 +559,16 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 		print (sourceName,destName,event,spellName,spellID)
 	end
 	enddebug]]--
+	
+	
+	if (UnitExists("boss1")) then
+		killBoss = true
+	elseif (killBoss and not UnitAffectingCombat("player")) then
+		killBoss = false
+		VRA:bossWipe()
+	end
+	
+	
 	if (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_ME] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
 		if(not vradb.buffAppliedSpecific) then
 			if(vradb.onlyRaidGroup) then
