@@ -1,3 +1,15 @@
+Version 1.1.1
+Added more options for when VRA should be enabled
+Added abilities:
+  - Anti-Magic Shell
+  - Rune Tap
+Added following abilities to Defensive Buff Bar (Applied to self only):
+  - Hand of Sacrifice
+  - Ironbark
+  - Life Cocoon
+  - Pain Suppression
+  - Vigilance
+Moved default position of bars
 Version 1.1.0
 Removed spells which Patch 6.0.2 removed
 Added abilities:

@@ -91,6 +91,8 @@ function VRA:InitDB()
 			k = tostring(k)
 			vradb.spellsB[k] = newSpellTable(v)
 			self:AddDataBOption(k)
+			
+			
 		end
 	end
 	
@@ -509,7 +511,7 @@ function VRA:AddDataBOption(spellId)
 		vradb.spellsB[dbKey] = nil
 		return 
 	end	
-	local isOriginal = ( db.type ~= "custom" ) and true or false
+	local isOriginal = not(( db.type == "custom" or db.type == "premade self" ))
 	local op = self.options.args.BuffBar.args
 	op[dbKey] = {
 		type = "group",
@@ -517,7 +519,7 @@ function VRA:AddDataBOption(spellId)
 		icon = icon,
 		disabled = function() if(vradb.enableBCooldownBar) then return false else return true end end,
 		args = {
-			enableo = {
+			enableb = {
 				type = "toggle",
 				desc = function() GameTooltip:SetHyperlink(GetSpellLink(spellId)) end,
 				descStyle = "custom",
@@ -526,7 +528,7 @@ function VRA:AddDataBOption(spellId)
 				get = function() return db.enable end,
 				order = 1,
 			},
-			selfOnlyo = {
+			selfOnlyb = {
 				type = "toggle",
 				desc = "Only when applied to self",
 				name = "Applied to self only",
@@ -535,7 +537,7 @@ function VRA:AddDataBOption(spellId)
 				get = function() return db.selfOnly end,
 				order = 2,
 			},
-			headero = {
+			headerb = {
 				type = "header",
 				name = "",
 				order = 3,
@@ -548,26 +550,26 @@ function VRA:AddDataBOption(spellId)
 				-- set = function(info, value) db.cd = tonumber(value) end,
 				-- pattern = "^%d+$",
 			-- },
-			durationo = {
+			durationb = {
 				name = "Duration",
 				type = "input",
 				desc = "In seconds",
-				disabled = isOriginal,
+				disabled = db.type ~= "custom",
 				get = function() return tostring(db.duration or 0) end,
 				set = function(info, value) db.duration = tonumber(value) end,
 				pattern = "^%d+$",
 			},
-			spellIdo = {
+			spellIdb = {
 				name = "Spell ID",
 				type = "input",
 				disabled = true,
 				get = function() return dbKey end,
 				pattern = "^%d+$",
 			},
-			deleteo = {
+			deleteb = {
 				name = "DELETE",
 				type = "execute",
-				disabled = isOriginal,
+				disabled = db.type ~= "custom",
 				confirm = true,
 				confirmText = "Are you sure to delete the data?",
 				func = function() vradb.spellsO[dbKey] = nil op[dbKey] = nil end,
@@ -575,6 +577,10 @@ function VRA:AddDataBOption(spellId)
 			},
 		},
 	}
+	if(db.type == "premade self") then
+		op[dbKey].args.selfOnlyb.set(_,true)
+	end
+	
 end
 
 
@@ -1914,23 +1920,51 @@ function VRA:OnOptionCreate()
 							all = {
 								type = 'toggle',
 								name = L["Anywhere"],
-								desc = L["Alert works anywhere"],
+								desc = L["Anywhere Option Description"],
 								order = 1,
-							},
-							raid = {
-								type = 'toggle',
-								name = L["Raid"],
-								desc = L["Alert only works in raid instances"],
-								disabled = function() return vradb.all end,
-								order = 2,
 							},
 							field = {
 								type = 'toggle',
 								name = L["World"],
-								desc = L["Alert works anywhere else than raid instances"],
+								desc = L["World Option Description"],
+								disabled = function() return vradb.all end,
+								order = 2,
+							},
+							battleground = {
+								type = 'toggle',
+								name = L["Battleground"],
+								desc = L["Battleground Option Description"],
+								disabled = function() return vradb.all end,
+								order = 3,
+							},
+							arena = {
+								type = 'toggle',
+								name = L["Arena"],
+								desc = L["Arena Option Description"],
+								disabled = function() return vradb.all end,
+								order = 4,
+							},
+							instance = {
+								type = 'toggle',
+								name = L["Instance"],
+								desc = L["Instance Option Description"],
 								disabled = function() return vradb.all end,
 								order = 5,
-							}
+							},
+							raid = {
+								type = 'toggle',
+								name = L["Raid"],
+								desc = L["Raid Option Description"],
+								disabled = function() return vradb.all end,
+								order = 6,
+							},
+							scenario = {
+								type = 'toggle',
+								name = L["Scenario"],
+								desc = L["Scenario Option Description"],
+								disabled = function() return vradb.all end,
+								order = 7,
+							},
 						},
 					},
 					voice = {
@@ -2062,7 +2096,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC41F3BDeath Knight|r"],
 								order = 5,
-								args = listOption({48792,49028,55233},"auraApplied"),
+								args = listOption({48792,49028,55233,48707,48982},"auraApplied"),
 							},
 							druid = {
 								type = 'group',

@@ -133,17 +133,29 @@ function VocalRaidAssistant:GetBarDataB()
 			class = "DRUID",
 			duration = 8,
 		},
-		[115213] = {
+		[102342] = {
 			desc = "",
-			type = "premade",
+			type = "premade self",
+			class = "DRUID",
+			duration = 12,
+		},
+		[116849] = {
+			desc = "",
+			type = "premade self",
 			class = "MONK",
-			duration = 6,
+			duration = 12,
 		},
 		[31821] = {
 			desc = "",
 			type = "premade",
 			class = "PALADIN",
 			duration = 6,
+		},
+		[6940] = {
+			desc = "",
+			type = "premade self",
+			class = "PALADIN",
+			duration = 12,
 		},
 		[64843] = {
 			desc = "",
@@ -162,6 +174,12 @@ function VocalRaidAssistant:GetBarDataB()
 			type = "premade",
 			class = "PRIEST",
 			duration = 15,
+		},
+		[33206] = {
+			desc = "",
+			type = "premade self",
+			class = "PRIEST",
+			duration = 8,
 		},
 		[76577] = {
 			desc = "",
@@ -186,6 +204,12 @@ function VocalRaidAssistant:GetBarDataB()
 			type = "premade",
 			class = "WARRIOR",
 			duration = 10,
+		},
+		[114030] = {
+			desc = "",
+			type = "premade self",
+			class = "WARRIOR",
+			duration = 12,
 		},
 		[159916] = {
 			desc = "",
@@ -235,6 +259,8 @@ function VocalRaidAssistant:GetSpellList ()
 			[48792] = "icebound",
 			[49028] = "dancingruneweapon",
 			[55233] = "vampiricblood",
+			[48707] = "antimagicshell",
+			[48982] = "runetap",
 			--hunter
 			[34477] = "misdirection",
 			[53480] = "roarofsacrifice",

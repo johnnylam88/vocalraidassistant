@@ -63,6 +63,8 @@ local dbDefaults = {
 	profile = {
 		all = false,
 		raid = true,
+		instance = true,
+		scenario = true,
 		
 		buffAppliedSpecific = false,
 		onlyRaidGroup = true,
@@ -78,7 +80,7 @@ local dbDefaults = {
 		spellsB = {},
 		dataLock = true,
 		
-		barX = GetScreenWidth()-200,
+		barX = GetScreenWidth()/3-200,
 		barY = GetScreenHeight(),
 		heightX = 20,
 		barWidth = 200,
@@ -93,7 +95,7 @@ local dbDefaults = {
 		enableCooldownBar = false,
 		growthDirection = true,
 		
-		obarX = GetScreenWidth()+200,
+		obarX = GetScreenWidth()/3+200,
 		obarY = GetScreenHeight(),
 		oheightX = 20,
 		obarWidth = 200,
@@ -105,7 +107,7 @@ local dbDefaults = {
 		oenableCooldownBar = false,
 		ogrowthDirection = true,
 		
-		bbarX = GetScreenWidth(),
+		bbarX = GetScreenWidth()/3,
 		bbarY = GetScreenHeight(),
 		bheightX = 20,
 		bbarWidth = 200,
@@ -124,19 +126,19 @@ local dbDefaults = {
 		interrupt = false,
 		
 		unholyfrenzy = false,
-		icebound = false,
-		dancingruneweapon = false,
+		icebound = true,
+		dancingruneweapon = true,
 		vampiricblood = false,
 		barkskin = false,
 		bristlingfur = false,
 		mightofursoc = false,
-		survivalinstincts = false,
-		guardianofancientkings = false,
+		survivalinstincts = true,
+		guardianofancientkings = true,
 		argentdefender = false,
 		divineprotection = false,
 		divineshield = false,
-		shieldwall = false,
-		laststand = false,
+		shieldwall = true,
+		laststand = true,
 		demoralizingshout = false,
 		shatteringthrow = false,
 		
@@ -152,6 +154,8 @@ local dbDefaults = {
 		soulstone = false,
 		rebirth = false,
 		raiseally = false,
+		runetap = false,
+		antimagicshell = false,
 		
 		custom = {},
 	}	
@@ -319,6 +323,16 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
 					},
+					header11 = {
+							order = -22,
+							type = "header",
+							name = "1.1.1",
+					},
+					desc11 = {
+						order	= -21,
+						type	= "description",
+						name	= L["1.1.1 Changelog"],
+					},
 					header10 = {
 							order = -20,
 							type = "header",
@@ -434,6 +448,7 @@ function VocalRaidAssistant:OnEnable()
 	VocalRaidAssistant:RegisterEvent("PLAYER_ENTERING_WORLD")
 	VocalRaidAssistant:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	VocalRaidAssistant:RegisterEvent("GROUP_ROSTER_UPDATE","UpdateRoster")
+		
 	--VocalRaidAssistant:RegisterEvent("UNIT_AURA")
 	if not VRA_LANGUAGE[vradb.path] then vradb.path = VRA_LOCALEPATH[GetLocale()] end
 	self.throttled = {}
@@ -496,7 +511,7 @@ function VocalRaidAssistant:PlaySpell(listName, spellID, ...)
 end
 function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	local _,currentZoneType = IsInInstance()
-	if (not ((currentZoneType == "none" and vradb.field) or (currentZoneType == "raid" and vradb.raid) or vradb.all)) then
+	if (not ((currentZoneType == "none" and vradb.field) or (currentZoneType == "pvp" and vradb.battleground) or (currentZoneType == "arena" and vradb.arena) or (currentZoneType == "party" and vradb.instance) or (currentZoneType == "raid" and vradb.raid) or (currentZoneType == nil and vradb.scenario) or vradb.all)) then
 		return
 	end
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName= select ( 1 , ... );
