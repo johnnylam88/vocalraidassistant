@@ -58,11 +58,11 @@ function VRA:InitDB()
 	end
 	
 	for k, v in pairs(vradb.spells) do
-		self:AddDataOption(tonumber(k))
+		self:AddDataOption(k)
 	end		
 	for k, v in pairs(vradb.spells) do
 		if v.type ~= "custom" then
-			vradb.spells[k] = nil
+			--vradb.spells[k] = nil
 		end
 	end
 	
@@ -77,11 +77,11 @@ function VRA:InitDB()
 	
 	
 	for k, v in pairs(vradb.spellsO) do
-		self:AddDataOOption(tonumber(k))
+		self:AddDataOOption(k)
 	end		
 	for k, v in pairs(vradb.spellsO) do
 		if v.type ~= "custom" then
-			vradb.spellsO[k] = nil
+			--vradb.spellsO[k] = nil
 		end
 	end
 	
@@ -98,11 +98,11 @@ function VRA:InitDB()
 	
 	
 	for k, v in pairs(vradb.spellsB) do
-		self:AddDataBOption(tonumber(k))
+		self:AddDataBOption(k)
 	end		
 	for k, v in pairs(vradb.spellsB) do
 		if v.type ~= "custom" then
-			vradb.spellsB[k] = nil
+			--vradb.spellsB[k] = nil
 		end
 	end
 	
@@ -140,6 +140,10 @@ end
 
 local function RGBClass(name)
 	local class = VRA:class(name)
+	
+	if(class==nil) then
+		class = UnitClass(name)
+	end
 	
 	if(class=="Death Knight") then return "0.77,0.12,0.23"
 	elseif(class=="Druid") then return "1.00,0.49,0.04"
@@ -513,6 +517,7 @@ function VRA:AddDataBOption(spellId)
 	end	
 	local isOriginal = not(( db.type == "custom" or db.type == "premade self" ))
 	local op = self.options.args.BuffBar.args
+	
 	op[dbKey] = {
 		type = "group",
 		name = function() local s = name if db.type == "custom" then s = " * " .. name end if not db.enable then s = "|cffDD1133" .. s .. "|r" end return s end,
@@ -572,7 +577,13 @@ function VRA:AddDataBOption(spellId)
 				disabled = db.type ~= "custom",
 				confirm = true,
 				confirmText = "Are you sure to delete the data?",
-				func = function() vradb.spellsO[dbKey] = nil op[dbKey] = nil end,
+				func = function()
+					local op = self.options.args.BuffBar.args
+					local data = self:GetBarDataB()
+					local db = vradb.spellsB
+					db[dbKey] = nil
+					op[dbKey] = nil
+				end,
 				order = -1,
 			},
 		},
@@ -624,15 +635,22 @@ end
 
 
 function VRA:CreateBBar(player,spell,...)
-	
+	if(vradb.spellsB[tostring(spell)]~=nil) then
+	if(vradb.spellsB[tostring(spell)].enable) then
 	if(not lockedB) then
 		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
-		
+		local per = ...
 		local PROPOSAL_DURATION = spellBCooldowns(spell)
 		
-		if(PROPOSAL_DURATION == -1 and ...=="personal") then
+		if(per~="personal" and vradb.spellsB[tostring(spell)].selfOnly) then
+		
+		else
+		if(PROPOSAL_DURATION == -1 and per=="personal") then
 			PROPOSAL_DURATION = VRA:spellPBCooldowns(spell)
 		end
+		
+	
+		
 		
 		local accept = true
 		for i,j in pairs(playerBSpell) do
@@ -669,9 +687,11 @@ function VRA:CreateBBar(player,spell,...)
 			local classColor
 			classColor = RGBClassTEST(player)
 			
+			
 			if(classColor == "") then
 				classColor = RGBClass(player)
 			end
+			
 			activeBBarsArray[activeBBars]:SetStatusBarColor(strsub(classColor,1,4),strsub(classColor,6,9),strsub(classColor,11,14))
 		
 			
@@ -735,6 +755,9 @@ function VRA:CreateBBar(player,spell,...)
 				end
 			end)
 		end
+		end
+	end
+	end
 	end
 end
 
@@ -917,7 +940,13 @@ function VRA:AddDataOOption(spellId)
 				disabled = isOriginal,
 				confirm = true,
 				confirmText = "Are you sure to delete the data?",
-				func = function() vradb.spellsO[dbKey] = nil op[dbKey] = nil end,
+				func = function() 
+				local op = self.options.args.OffensiveCooldownBar.args
+				local data = self:GetBarDataO()
+				local db = vradb.spellsO
+				db[dbKey] = nil
+				op[dbKey] = nil
+				end,
 				order = -1,
 			},
 		},
@@ -966,11 +995,16 @@ end
 
 
 function VRA:CreateOBar(player,spell,...)
-	
+	if(vradb.spellsO[tostring(spell)]~=nil) then
+	if(vradb.spellsO[tostring(spell)].enable) then
 	if(not lockedO) then
 		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
 	
 		local PROPOSAL_DURATION = spellOCooldowns(spell)
+		
+		if(per~="personal" and vradb.spellsO[tostring(spell)].selfOnly) then
+		
+		else
 		
 		if(PROPOSAL_DURATION == -1 and ...=="personal") then
 			PROPOSAL_DURATION = VRA:spellPOCooldowns(spell)
@@ -1075,6 +1109,9 @@ function VRA:CreateOBar(player,spell,...)
 				end
 			end)
 		end
+		end
+	end
+	end
 	end
 end
 
@@ -1265,7 +1302,13 @@ function VRA:AddDataOption(spellId)
 				disabled = isOriginal,
 				confirm = true,
 				confirmText = "Are you sure to delete the data?",
-				func = function() vradb.spells[dbKey] = nil op[dbKey] = nil end,
+				func = function() 
+				local op = self.options.args.CooldownBar.args
+				local data = self:GetBarData()
+				local db = vradb.spells
+				db[dbKey] = nil
+				op[dbKey] = nil
+				end,
 				order = -1,
 			},
 		},
@@ -1299,7 +1342,8 @@ end
 
 
 function VRA:CreateBar(player,spell)
-	
+	if(vradb.spells[tostring(spell)]~=nil) then
+	if(vradb.spells[tostring(spell)].enable) then
 	if(not locked) then
 		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
 	
@@ -1408,6 +1452,8 @@ function VRA:CreateBar(player,spell)
 				end
 			end)
 		end
+	end
+	end
 	end
 end
 
@@ -2472,11 +2518,11 @@ function VRA:OnOptionCreate()
 						disabled = function() if(vradb.enableCooldownBar) then return false else return true end end,
 						args = {
 							spellId = {
-								name = "Spell ID",
+								name = "Spell ID/Name",
 								type = "input",
 								set = function(info, value) newSpellId = value end,
 								get = function() return newSpellId end,
-								pattern = "^%d+$",
+								--pattern = "^%d+$",
 								order = 1,
 							},
 							addCustom = {
@@ -2487,6 +2533,7 @@ function VRA:OnOptionCreate()
 									if not vradb.spells[newSpellId] then
 										vradb.spells[tostring(newSpellId)] = newSpellTable()
 										self:AddDataOption(tostring(newSpellId))
+										self.options.args.CooldownBar.args.BarAbilities.args.spellId.set("","")
 									else
 										--self:log("Id '" .. newSpellId .. "' " .. "already exists.")
 									end
@@ -2679,11 +2726,11 @@ function VRA:OnOptionCreate()
 						disabled = function() if(vradb.enableBCooldownBar) then return false else return true end end,
 						args = {
 							bspellId = {
-								name = "Spell ID",
+								name = "Spell ID/Name",
 								type = "input",
 								set = function(info, value) newSpellId = value end,
 								get = function() return newSpellId end,
-								pattern = "^%d+$",
+								--pattern = "^%d+$",
 								order = 1,
 							},
 							baddCustom = {
@@ -2694,6 +2741,7 @@ function VRA:OnOptionCreate()
 									if not vradb.spellsB[newSpellId] then
 										vradb.spellsB[tostring(newSpellId)] = newSpellTable()
 										self:AddDataBOption(tostring(newSpellId))
+										self.options.args.BuffBar.args.bBarAbilities.args.bspellId.set("","")
 									else
 										--self:log("Id '" .. newSpellId .. "' " .. "already exists.")
 									end
@@ -2870,11 +2918,11 @@ function VRA:OnOptionCreate()
 						disabled = function() if(vradb.enableOCooldownBar) then return false else return true end end,
 						args = {
 							ospellId = {
-								name = "Spell ID",
+								name = "Spell ID/Name",
 								type = "input",
 								set = function(info, value) newSpellId = value end,
 								get = function() return newSpellId end,
-								pattern = "^%d+$",
+								--pattern = "^%d+$",
 								order = 1,
 							},
 							oaddCustom = {
@@ -2885,6 +2933,7 @@ function VRA:OnOptionCreate()
 									if not vradb.spellsO[newSpellId] then
 										vradb.spellsO[tostring(newSpellId)] = newSpellTable()
 										self:AddDataOOption(tostring(newSpellId))
+										self.options.args.OffensiveCooldownBar.args.oBarAbilities.args.ospellId.set("","")
 									else
 										--self:log("Id '" .. newSpellId .. "' " .. "already exists.")
 									end
