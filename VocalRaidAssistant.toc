@@ -3,10 +3,11 @@
 ## Notes: Raid Cooldown Alerter
 ## Author: Nitrak
 ## SavedVariables: VocalRaidAssistantDB
-## Version: 1.0.4
+## Version: 1.0.5
 
 embeds.xml
 Locales\locales.xml
+fonts\includes.xml
 
 VocalRaidAssistant.lua
 spelllist.lua

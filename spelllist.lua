@@ -5,16 +5,24 @@
 			--druid
 			[29166] = "innervate",
 			[102342] = "ironbark",
+			[22812] = "barkskin",
+			[106922] = "mightofursoc",
+			[61336] = "survivalinstincts",
 
 			--paladin
 			[1022] = "handOfProtection", 
 			[6940] = "sacrifice", 
-			
+			[86659] = "guardianofancientkings",
+			[31850] = "argentdefender",
+			[498] = "divineprotection",
+			[642] = "divineshield",
 			--rogue
 			[57934] = "tricksofthetrade",
 			--warrior
 			[114030] = "vigilance",
-
+			[871] = "shieldwall",
+			[12975] = "laststand",
+			
 			--preist
 			[33206] = "painSuppression", 
 			[47788] = "guardianSpirit",
@@ -24,13 +32,15 @@
 			--mage
 			
 			--dk
-			
+			[48792] = "icebound",
+			[49028] = "dancingruneweapon",
+			[55233] = "vampiricblood",
 			--hunter
 			[34477] = "misdirection",
 			--lock
 			
 			--monk
-			
+			[115203] = "fortifyingbrew",
 			[116849] = "lifeCocoon",
 		},
 		auraRemoved = {					-- aura removed [spellid] = ".mp3 file name",
@@ -60,6 +70,7 @@
 			[114207] = "skullBanner",
 			[114203] = "demoralizingBanner",
 			[122294] = "sstampedingshout",
+			[1160] = "demoralizingshout",
 			--priest
 			[64843] = "divineHymn",
 			[64901] = "hymnOfHope",

@@ -1,4 +1,5 @@
 local VRA = VocalRaidAssistant
+local TIMER = timers
 local vradb
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
@@ -8,9 +9,995 @@ local rosterInfoArray = {}
 local rosterStatusArray = {}
 local rosterStatusOldArray = {}
 local rosterNameArray = {}
+local rosterClassArray = {}
 local testnull = 0
 local first = true
 local raidMaxSize = 40
+local activeBarsArray = {}
+local activeBars = 0
+local activeMove = 0
+local playerSpell = {}
+local locked = false
+local activeOBarsArray = {}
+local activeOBars = 0
+local activeOMove = 0
+local playerOSpell = {}
+local lockedO = false
+local activeBBarsArray = {}
+local activeBBars = 0
+local activeBMove = 0
+local playerBSpell = {}
+local lockedB = false
+
+
+
+function VRA:getBarX()
+   return vradb.barX
+end
+
+function VRA:setBarX(newValue)
+    vradb.barX = newValue
+end
+
+function VRA:getBarY()
+   return vradb.barY
+end
+
+function VRA:setBarY(newValue)
+    vradb.barY = newValue
+end
+
+function VRA:getHeightX()
+   return vradb.heightX
+end
+
+function VRA:setHeightX(newValue)
+    vradb.heightX = newValue
+end
+
+function VRA:getBarWidth()
+   return vradb.barWidth
+end
+
+function VRA:getBarHeight()
+	return vradb.barHeight
+end
+
+function VRA:getFontSize()
+	return vradb.fontSize
+end
+
+function VRA:getFontType()
+	return vradb.fontType
+end
+
+function VRA:getBarTexture()
+	return vradb.barTexture
+end
+
+function VRA:SetFont(font)
+	
+	return LSM:Fetch("font", font, true)
+    
+end
+
+function VRA:SetTexture(texture)
+	
+	return LSM:Fetch("statusbar", texture, true)
+    
+end
+
+
+function VRA:getOBarX()
+   return vradb.obarX
+end
+
+function VRA:setOBarX(newValue)
+    vradb.obarX = newValue
+end
+
+function VRA:getOBarY()
+   return vradb.obarY
+end
+
+function VRA:setOBarY(newValue)
+    vradb.obarY = newValue
+end
+
+function VRA:getOHeightX()
+   return vradb.oheightX
+end
+
+function VRA:setOHeightX(newValue)
+    vradb.oheightX = newValue
+end
+
+function VRA:getOBarWidth()
+   return vradb.obarWidth
+end
+
+function VRA:getOBarHeight()
+	return vradb.obarHeight
+end
+
+function VRA:getOFontSize()
+	return vradb.ofontSize
+end
+
+function VRA:getOFontType()
+	return vradb.ofontType
+end
+
+function VRA:getOBarTexture()
+	return vradb.obarTexture
+end
+
+
+function VRA:getBBarX()
+   return vradb.bbarX
+end
+
+function VRA:setBBarX(newValue)
+    vradb.bbarX = newValue
+end
+
+function VRA:getBBarY()
+   return vradb.bbarY
+end
+
+function VRA:setBBarY(newValue)
+    vradb.bbarY = newValue
+end
+
+function VRA:getBHeightX()
+   return vradb.bheightX
+end
+
+function VRA:setBHeightX(newValue)
+    vradb.bheightX = newValue
+end
+
+function VRA:getBBarWidth()
+   return vradb.bbarWidth
+end
+
+function VRA:getBBarHeight()
+	return vradb.bbarHeight
+end
+
+function VRA:getBFontSize()
+	return vradb.bfontSize
+end
+
+function VRA:getBFontType()
+	return vradb.bfontType
+end
+
+function VRA:getBBarTexture()
+	return vradb.bbarTexture
+end
+
+
+
+function VRA:SetFont(font)
+	
+	return LSM:Fetch("font", font, true)
+    
+end
+
+function VRA:SetTexture(texture)
+	
+	return LSM:Fetch("statusbar", texture, true)
+    
+end
+
+local function convertTime(t)
+	
+	local minute = math.floor(t/60)
+	local seconds = math.floor((t/60-minute)*60)
+	
+	if(seconds<10) then
+		return minute..":0"..seconds
+	else
+		return minute..":"..seconds
+	end
+end
+
+local function ArraySize(array)
+
+	local Count = 0
+	for Index, Value in pairs( array ) do
+		Count = Count + 1
+	end
+	
+	return Count
+
+end
+
+
+function VRA:modifyBars()
+	
+	if(vradb.growthDirection) then
+		for i=1,activeBars do
+			activeBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),i*VRA:getBarHeight()+VRA:getBarY())
+		end
+	else
+		for i=1,activeBars do
+			activeBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-i*VRA:getBarHeight()+VRA:getBarY())
+		end
+	end
+
+end
+
+function VRA:modifyOBars()
+	
+	if(vradb.ogrowthDirection) then
+		for i=1,activeOBars do
+			activeOBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),i*VRA:getOBarHeight()+VRA:getOBarY())
+		end
+	else
+		for i=1,activeOBars do
+			activeOBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-i*VRA:getOBarHeight()+VRA:getOBarY())
+		end
+	end
+
+end
+
+function VRA:modifyBBars()
+	
+	if(vradb.bgrowthDirection) then
+		for i=1,activeBBars do
+			activeBBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),i*VRA:getBBarHeight()+VRA:getBBarY())
+		end
+	else
+		for i=1,activeBBars do
+			activeBBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-i*VRA:getBBarHeight()+VRA:getBBarY())
+		end
+	end
+
+end
+
+
+
+
+
+
+
+
+function VRA:MoveBBar(name,duration)
+	
+	if(activeBMove == 0) then
+		lockedB = true
+		activeBMove = 1
+		
+		--Clearing cooldowns
+		for i,j in pairs(playerBSpell) do
+			playerBSpell[i]=""
+		end
+		
+		for i=1,activeBBars do
+			activeBBarsArray[i]:Hide()
+		end
+		
+		activeBBars = 0
+		
+		activeBBars = activeBBars+1
+		activeBBarsArray[activeBBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+		local text = activeBBarsArray[activeBBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+		text:SetPoint("CENTER",activeBBarsArray[activeBBars],"CENTER")
+		text:SetText(name)
+		text:SetFont(VRA:SetFont(VRA:getBFontType()), VRA:getBFontSize(), "OUTLINE")
+		
+		activeBBarsArray[activeBBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBBarTexture()))
+		activeBBarsArray[activeBBars]:GetStatusBarTexture():SetHorizTile(false)
+		activeBBarsArray[activeBBars]:SetMinMaxValues(0, duration)
+		activeBBarsArray[activeBBars]:SetValue(100)
+		activeBBarsArray[activeBBars]:SetWidth(VRA:getBBarWidth())
+		activeBBarsArray[activeBBars]:SetHeight(VRA:getBBarHeight())
+		if(vradb.growthDirection) then
+			activeBBarsArray[activeBBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),activeBBars*VRA:getOBarHeight()+VRA:getBBarY())
+		else
+			activeBBarsArray[activeBBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-activeBBars*VRA:getBBarHeight()+VRA:getBBarY())
+		end
+		activeBBarsArray[activeBBars]:SetStatusBarColor(0,1,0)
+		
+		activeBBarsArray[activeBBars].bg = activeBBarsArray[activeBBars]:CreateTexture(nil, "BACKGROUND")
+		activeBBarsArray[activeBBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+		activeBBarsArray[activeBBars].bg:SetAllPoints(true)
+		activeBBarsArray[activeBBars].bg:SetVertexColor(0, 0, 0)
+		
+		activeBBarsArray[activeBBars]:SetMovable(true)
+		activeBBarsArray[activeBBars]:EnableMouse(true)
+		activeBBarsArray[activeBBars]:RegisterForDrag("LeftButton")
+		activeBBarsArray[activeBBars]:SetScript("OnDragStart", activeBBarsArray[activeBBars].StartMoving)
+		activeBBarsArray[activeBBars]:SetScript("OnDragStop", activeBBarsArray[activeBBars].StopMovingOrSizing)
+		
+		
+		
+		local t = duration
+		local HALF_POINT = duration / 2
+		activeBBarsArray[activeBBars]:SetScript("OnUpdate", function(bar, elapsed)
+			t = t - elapsed
+			bar:SetValue(t)
+			if t > HALF_POINT then
+				bar:SetStatusBarColor(1, t / duration, 0)
+			else
+				bar:SetStatusBarColor(1 - (t / duration), 1, 0)
+			end
+			bar:SetWidth(VRA:getBBarWidth())
+			bar:SetHeight(VRA:getBBarHeight())
+			text:SetFont(VRA:SetFont(VRA:getBFontType()), VRA:getBFontSize(), "OUTLINE")
+			activeBBarsArray[activeBBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBBarTexture()))
+			if t < 0.001 then
+				activeBBars = activeBBars-1
+				for i=1,activeBBars do
+					activeBBarsArray[i] = activeBBarsArray[i+1]
+				end
+				VRA:setBBarX(bar:GetLeft())
+				VRA:setBBarY(bar:GetBottom()-VRA:getBBarHeight())
+				
+				text:SetText("")
+				VRA:modifyBBars()
+				bar:Hide()
+				activeBMove = 0
+				lockedB = false
+			end
+		end)
+	end
+end
+
+
+local function spellBCooldowns(spellName)
+	
+	if(spellName == "Anti Magic Zone") then
+		return 3
+	elseif(spellName == "Tranquility") then
+		return 8
+	elseif(spellName == "Avert Harm") then
+		return 6
+	elseif(spellName == "Revival") then
+		return 0
+	elseif(spellName == "Devotion Aura") then
+		return 6		
+	elseif(spellName == "Divine Hymn") then
+		return 8
+	elseif(spellName == "Hymn of Hope") then
+		return 8
+	elseif(spellName == "Power Word: Barrier") then
+		return 10
+	elseif(spellName == "Vampiric Embrace") then
+		return 15
+	elseif(spellName == "Smoke Bomb") then
+		return 5
+	elseif(spellName == "Healing Tide Totem") then
+		return 10
+	elseif(spellName == "Spirit Link Totem") then
+		return 6
+	elseif(spellName == "Mana Tide Totem") then
+		return 16
+	elseif(spellName == "Rallying Cry") then
+		return 10
+	elseif(spellName == "Demoralizing Banner") then
+		return 15
+	end
+	
+end
+
+
+
+function VRA:CreateBBar(player,spell)
+	
+	if(not lockedB) then
+		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
+	
+		local PROPOSAL_DURATION = spellBCooldowns(name)
+		local accept = true
+		for i,j in pairs(playerBSpell) do
+			if(i == player) then
+				if(playerBSpell[i]==name) then
+					accept = false
+				end
+			end
+		end
+	
+		if(PROPOSAL_DURATION ~= nil and PROPOSAL_DURATION>0 and accept==true) then
+		
+			activeBBars = activeBBars+1
+			activeBBarsArray[activeBBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+			local text = activeBBarsArray[activeBBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+			text:SetPoint("CENTER",activeBBarsArray[activeBBars],"CENTER")
+			text:SetFont(VRA:SetFont(VRA:getBFontType()), VRA:getBFontSize(), "OUTLINE")
+		
+			activeBBarsArray[activeBBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBBarTexture()))
+			activeBBarsArray[activeBBars]:GetStatusBarTexture():SetHorizTile(false)
+			activeBBarsArray[activeBBars]:SetMinMaxValues(0, PROPOSAL_DURATION)
+			activeBBarsArray[activeBBars]:SetValue(100)
+			activeBBarsArray[activeBBars]:SetWidth(VRA:getBBarWidth())
+			activeBBarsArray[activeBBars]:SetHeight(VRA:getBBarHeight())
+			if(vradb.growthDirection) then
+				activeBBarsArray[activeBBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),activeBBars*VRA:getBBarHeight()+VRA:getBBarY())
+			else
+				activeBBarsArray[activeBBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-activeBBars*VRA:getBBarHeight()+VRA:getBBarY())
+			end
+			activeBBarsArray[activeBBars]:SetStatusBarColor(0,1,0)
+		
+			activeBBarsArray[activeBBars].bg = activeBBarsArray[activeBBars]:CreateTexture(nil, "BACKGROUND")
+			activeBBarsArray[activeBBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+			activeBBarsArray[activeBBars].bg:SetAllPoints(true)
+			activeBBarsArray[activeBBars].bg:SetVertexColor(0, 0, 0)
+	
+		
+			local once = false
+			local once2 = false
+			local t = PROPOSAL_DURATION
+			local HALF_POINT = PROPOSAL_DURATION / 2
+			activeBBarsArray[activeBBars]:SetScript("OnUpdate", function(bar, elapsed)
+				t = t - elapsed
+				bar:SetValue(t)
+				if t > HALF_POINT then
+					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
+				else
+					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
+				end
+				bar:SetWidth(VRA:getBBarWidth())
+				bar:SetHeight(VRA:getBBarHeight())
+				text:SetFont(VRA:SetFont(VRA:getBFontType()), VRA:getBFontSize(), "OUTLINE")
+				local playerTemp = player
+				if(not once) then
+					playerBSpell[player] = name
+					once = true
+				end
+				local dashPos = strfind(player,"-")
+				if(dashPos~=nil) then
+					player = strsub(player,1,dashPos)
+				end
+				text:SetText(player.." - "..name.."("..convertTime(t)..")")
+				activeBBarsArray[activeBBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBBarTexture()))
+				
+				VRA:modifyBBars()
+				for i=1,activeBBars do
+					if(i>1) then
+						local min1,max1 = activeBBarsArray[i]:GetMinMaxValues()
+						local min2,max2 = activeBBarsArray[i-1]:GetMinMaxValues()
+						if((activeBBarsArray[i]:GetValue()/max1)<(activeBBarsArray[i-1]:GetValue()/max2)) then
+							if(vradb.growthDirection) then
+								activeBBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),(i-1)*VRA:getBBarHeight()+VRA:getBBarY())
+								activeBBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),(i)*VRA:getBBarHeight()+VRA:getBBarY())
+							else
+								activeBBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-(i-1)*VRA:getBBarHeight()+VRA:getBBarY())
+								activeBBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-(i)*VRA:getBBarHeight()+VRA:getBBarY())
+							end
+							local temp = activeBBarsArray[i]
+							activeBBarsArray[i] = activeBBarsArray[i-1]
+							activeBBarsArray[i-1] = temp
+						end
+					end
+				end
+				if t < 0.001 then
+					activeBBars = activeBBars-1
+					for i=1,activeBBars do
+						activeBBarsArray[i] = activeBBarsArray[i+1]
+					end
+					if(not once2) then
+						playerBSpell[playerTemp] = ""
+						once2 = true
+					end
+					text:SetText("")
+					VRA:modifyBBars()
+					bar:Hide()
+					
+				end
+			end)
+		end
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function VRA:MoveOBar(name,duration)
+	
+	if(activeOMove == 0) then
+		lockedO = true
+		activeOMove = 1
+		
+		--Clearing cooldowns
+		for i,j in pairs(playerOSpell) do
+			playerOSpell[i]=""
+		end
+		
+		for i=1,activeOBars do
+			activeOBarsArray[i]:Hide()
+		end
+		
+		activeOBars = 0
+		
+		activeOBars = activeOBars+1
+		activeOBarsArray[activeOBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+		local text = activeOBarsArray[activeOBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+		text:SetPoint("CENTER",activeOBarsArray[activeOBars],"CENTER")
+		text:SetText(name)
+		text:SetFont(VRA:SetFont(VRA:getOFontType()), VRA:getOFontSize(), "OUTLINE")
+		
+		activeOBarsArray[activeOBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getOBarTexture()))
+		activeOBarsArray[activeOBars]:GetStatusBarTexture():SetHorizTile(false)
+		activeOBarsArray[activeOBars]:SetMinMaxValues(0, duration)
+		activeOBarsArray[activeOBars]:SetValue(100)
+		activeOBarsArray[activeOBars]:SetWidth(VRA:getOBarWidth())
+		activeOBarsArray[activeOBars]:SetHeight(VRA:getOBarHeight())
+		if(vradb.growthDirection) then
+			activeOBarsArray[activeOBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),activeOBars*VRA:getOBarHeight()+VRA:getOBarY())
+		else
+			activeOBarsArray[activeOBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-activeOBars*VRA:getOBarHeight()+VRA:getOBarY())
+		end
+		activeOBarsArray[activeOBars]:SetStatusBarColor(0,1,0)
+		
+		activeOBarsArray[activeOBars].bg = activeOBarsArray[activeOBars]:CreateTexture(nil, "BACKGROUND")
+		activeOBarsArray[activeOBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+		activeOBarsArray[activeOBars].bg:SetAllPoints(true)
+		activeOBarsArray[activeOBars].bg:SetVertexColor(0, 0, 0)
+		
+		activeOBarsArray[activeOBars]:SetMovable(true)
+		activeOBarsArray[activeOBars]:EnableMouse(true)
+		activeOBarsArray[activeOBars]:RegisterForDrag("LeftButton")
+		activeOBarsArray[activeOBars]:SetScript("OnDragStart", activeOBarsArray[activeOBars].StartMoving)
+		activeOBarsArray[activeOBars]:SetScript("OnDragStop", activeOBarsArray[activeOBars].StopMovingOrSizing)
+		
+		
+		
+		local t = duration
+		local HALF_POINT = duration / 2
+		activeOBarsArray[activeOBars]:SetScript("OnUpdate", function(bar, elapsed)
+			t = t - elapsed
+			bar:SetValue(t)
+			if t > HALF_POINT then
+				bar:SetStatusBarColor(1, t / duration, 0)
+			else
+				bar:SetStatusBarColor(1 - (t / duration), 1, 0)
+			end
+			bar:SetWidth(VRA:getOBarWidth())
+			bar:SetHeight(VRA:getOBarHeight())
+			text:SetFont(VRA:SetFont(VRA:getOFontType()), VRA:getOFontSize(), "OUTLINE")
+			activeOBarsArray[activeOBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getOBarTexture()))
+			if t < 0.001 then
+				activeOBars = activeOBars-1
+				for i=1,activeOBars do
+					activeOBarsArray[i] = activeOBarsArray[i+1]
+				end
+				VRA:setOBarX(bar:GetLeft())
+				VRA:setOBarY(bar:GetBottom()-VRA:getOBarHeight())
+				
+				text:SetText("")
+				VRA:modifyOBars()
+				bar:Hide()
+				activeOMove = 0
+				lockedO = false
+			end
+		end)
+	end
+end
+
+
+local function spellOCooldowns(spellName)
+	
+	if(spellName == "Skull Banner") then
+		return 10
+	elseif(spellName == "Stormlash Totem") then
+		return 10
+	elseif(spellName == "Ancient Hysteria") then
+		return 40
+	elseif(spellName == "Time Warp") then
+		return 40
+	elseif(spellName == "Bloodlust") then
+		return 40		
+	elseif(spellName == "Heroism") then
+		return 40
+	elseif(spellName == "Shattering Throw") then
+		return 10
+	end
+	
+end
+
+
+
+function VRA:CreateOBar(player,spell)
+	
+	if(not lockedO) then
+		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
+	
+		local PROPOSAL_DURATION = spellOCooldowns(name)
+		local accept = true
+		for i,j in pairs(playerOSpell) do
+			if(i == player) then
+				if(playerOSpell[i]==name) then
+					accept = false
+				end
+			end
+		end
+	
+		if(PROPOSAL_DURATION ~= nil and PROPOSAL_DURATION>0 and accept==true) then
+		
+			activeOBars = activeOBars+1
+			activeOBarsArray[activeOBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+			local text = activeOBarsArray[activeOBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+			text:SetPoint("CENTER",activeOBarsArray[activeOBars],"CENTER")
+			text:SetFont(VRA:SetFont(VRA:getOFontType()), VRA:getOFontSize(), "OUTLINE")
+		
+			activeOBarsArray[activeOBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getOBarTexture()))
+			activeOBarsArray[activeOBars]:GetStatusBarTexture():SetHorizTile(false)
+			activeOBarsArray[activeOBars]:SetMinMaxValues(0, PROPOSAL_DURATION)
+			activeOBarsArray[activeOBars]:SetValue(100)
+			activeOBarsArray[activeOBars]:SetWidth(VRA:getOBarWidth())
+			activeOBarsArray[activeOBars]:SetHeight(VRA:getOBarHeight())
+			if(vradb.growthDirection) then
+				activeOBarsArray[activeOBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),activeOBars*VRA:getOBarHeight()+VRA:getOBarY())
+			else
+				activeOBarsArray[activeOBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-activeOBars*VRA:getOBarHeight()+VRA:getOBarY())
+			end
+			activeOBarsArray[activeOBars]:SetStatusBarColor(0,1,0)
+		
+			activeOBarsArray[activeOBars].bg = activeOBarsArray[activeOBars]:CreateTexture(nil, "BACKGROUND")
+			activeOBarsArray[activeOBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+			activeOBarsArray[activeOBars].bg:SetAllPoints(true)
+			activeOBarsArray[activeOBars].bg:SetVertexColor(0, 0, 0)
+	
+		
+			local once = false
+			local once2 = false
+			local t = PROPOSAL_DURATION
+			local HALF_POINT = PROPOSAL_DURATION / 2
+			activeOBarsArray[activeOBars]:SetScript("OnUpdate", function(bar, elapsed)
+				t = t - elapsed
+				bar:SetValue(t)
+				if t > HALF_POINT then
+					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
+				else
+					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
+				end
+				bar:SetWidth(VRA:getOBarWidth())
+				bar:SetHeight(VRA:getOBarHeight())
+				text:SetFont(VRA:SetFont(VRA:getOFontType()), VRA:getOFontSize(), "OUTLINE")
+				local playerTemp = player
+				if(not once) then
+					playerOSpell[player] = name
+					once = true
+				end
+				local dashPos = strfind(player,"-")
+				if(dashPos~=nil) then
+					player = strsub(player,1,dashPos)
+				end
+				text:SetText(player.." - "..name.."("..convertTime(t)..")")
+				activeOBarsArray[activeOBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getOBarTexture()))
+				
+				VRA:modifyOBars()
+				for i=1,activeOBars do
+					if(i>1) then
+						local min1,max1 = activeOBarsArray[i]:GetMinMaxValues()
+						local min2,max2 = activeOBarsArray[i-1]:GetMinMaxValues()
+						if((activeOBarsArray[i]:GetValue()/max1)<(activeOBarsArray[i-1]:GetValue()/max2)) then
+							if(vradb.growthDirection) then
+								activeOBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),(i-1)*VRA:getOBarHeight()+VRA:getOBarY())
+								activeOBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),(i)*VRA:getOBarHeight()+VRA:getOBarY())
+							else
+								activeOBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-(i-1)*VRA:getOBarHeight()+VRA:getOBarY())
+								activeOBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-(i)*VRA:getOBarHeight()+VRA:getOBarY())
+							end
+							local temp = activeOBarsArray[i]
+							activeOBarsArray[i] = activeOBarsArray[i-1]
+							activeOBarsArray[i-1] = temp
+						end
+					end
+				end
+				if t < 0.001 then
+					activeOBars = activeOBars-1
+					for i=1,activeOBars do
+						activeOBarsArray[i] = activeOBarsArray[i+1]
+					end
+					if(not once2) then
+						playerOSpell[playerTemp] = ""
+						once2 = true
+					end
+					text:SetText("")
+					VRA:modifyOBars()
+					bar:Hide()
+					
+				end
+			end)
+		end
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function VRA:MoveBar(name,duration)
+	
+	if(activeMove == 0) then
+		locked = true
+		activeMove = 1
+		
+		--Clearing cooldowns
+		for i,j in pairs(playerSpell) do
+			playerSpell[i]=""
+		end
+		
+		for i=1,activeBars do
+			activeBarsArray[i]:Hide()
+		end
+		
+		activeBars = 0
+		
+		activeBars = activeBars+1
+		activeBarsArray[activeBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+		local text = activeBarsArray[activeBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+		text:SetPoint("CENTER",activeBarsArray[activeBars],"CENTER")
+		text:SetText(name)
+		text:SetFont(VRA:SetFont(VRA:getFontType()), VRA:getFontSize(), "OUTLINE")
+		
+		activeBarsArray[activeBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBarTexture()))
+		activeBarsArray[activeBars]:GetStatusBarTexture():SetHorizTile(false)
+		activeBarsArray[activeBars]:SetMinMaxValues(0, duration)
+		activeBarsArray[activeBars]:SetValue(100)
+		activeBarsArray[activeBars]:SetWidth(VRA:getBarWidth())
+		activeBarsArray[activeBars]:SetHeight(VRA:getBarHeight())
+		if(vradb.growthDirection) then
+			activeBarsArray[activeBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),activeBars*VRA:getBarHeight()+VRA:getBarY())
+		else
+			activeBarsArray[activeBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-activeBars*VRA:getBarHeight()+VRA:getBarY())
+		end
+		activeBarsArray[activeBars]:SetStatusBarColor(0,1,0)
+		
+		activeBarsArray[activeBars].bg = activeBarsArray[activeBars]:CreateTexture(nil, "BACKGROUND")
+		activeBarsArray[activeBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+		activeBarsArray[activeBars].bg:SetAllPoints(true)
+		activeBarsArray[activeBars].bg:SetVertexColor(0, 0, 0)
+		
+		activeBarsArray[activeBars]:SetMovable(true)
+		activeBarsArray[activeBars]:EnableMouse(true)
+		activeBarsArray[activeBars]:RegisterForDrag("LeftButton")
+		activeBarsArray[activeBars]:SetScript("OnDragStart", activeBarsArray[activeBars].StartMoving)
+		activeBarsArray[activeBars]:SetScript("OnDragStop", activeBarsArray[activeBars].StopMovingOrSizing)
+		
+		
+		
+		local t = duration
+		local HALF_POINT = duration / 2
+		activeBarsArray[activeBars]:SetScript("OnUpdate", function(bar, elapsed)
+			t = t - elapsed
+			bar:SetValue(t)
+			if t > HALF_POINT then
+				bar:SetStatusBarColor(1, t / duration, 0)
+			else
+				bar:SetStatusBarColor(1 - (t / duration), 1, 0)
+			end
+			bar:SetWidth(VRA:getBarWidth())
+			bar:SetHeight(VRA:getBarHeight())
+			text:SetFont(VRA:SetFont(VRA:getFontType()), VRA:getFontSize(), "OUTLINE")
+			activeBarsArray[activeBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBarTexture()))
+			if t < 0.001 then
+				activeBars = activeBars-1
+				for i=1,activeBars do
+					activeBarsArray[i] = activeBarsArray[i+1]
+				end
+				VRA:setBarX(bar:GetLeft())
+				VRA:setBarY(bar:GetBottom()-VRA:getBarHeight())
+				
+				text:SetText("")
+				VRA:modifyBars()
+				bar:Hide()
+				activeMove = 0
+				locked = false
+			end
+		end)
+	end
+end
+
+
+local function spellCooldowns(spellName)
+	
+	if(spellName == "Anti Magic Zone") then
+		return 2*60
+	elseif(spellName == "Tranquility") then
+		return 8*60
+	elseif(spellName == "Avert Harm") then
+		return 3*60
+	elseif(spellName == "Revival") then
+		return 3*60
+	elseif(spellName == "Devotion Aura") then
+		return 3*60		
+	elseif(spellName == "Divine Hymn") then
+		return 3*60
+	elseif(spellName == "Hymn of Hope") then
+		return 6*60
+	elseif(spellName == "Power Word: Barrier") then
+		return 3*60
+	elseif(spellName == "Vampiric Embrace") then
+		return 3*60
+	elseif(spellName == "Smoke Bomb") then
+		return 3*60
+	elseif(spellName == "Healing Tide Totem") then
+		return 3*60
+	elseif(spellName == "Spirit Link Totem") then
+		return 3*60
+	elseif(spellName == "Mana Tide Totem") then
+		return 3*60
+	elseif(spellName == "Rallying Cry") then
+		return 3*60
+	elseif(spellName == "Demoralizing Banner") then
+		return 3*60
+	end
+	
+end
+
+
+
+function VRA:CreateBar(player,spell)
+	
+	if(not locked) then
+		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
+	
+		local PROPOSAL_DURATION = spellCooldowns(name)
+		local accept = true
+		for i,j in pairs(playerSpell) do
+			if(i == player) then
+				if(playerSpell[i]==name) then
+					accept = false
+				end
+			end
+		end
+	
+		if(PROPOSAL_DURATION ~= nil and PROPOSAL_DURATION>0 and accept==true) then
+		
+			activeBars = activeBars+1
+			activeBarsArray[activeBars] = CreateFrame("StatusBar", nil, UIParent)
+		
+			local text = activeBarsArray[activeBars]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+			text:SetPoint("CENTER",activeBarsArray[activeBars],"CENTER")
+			text:SetFont(VRA:SetFont(VRA:getFontType()), VRA:getFontSize(), "OUTLINE")
+		
+			activeBarsArray[activeBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBarTexture()))
+			activeBarsArray[activeBars]:GetStatusBarTexture():SetHorizTile(false)
+			activeBarsArray[activeBars]:SetMinMaxValues(0, PROPOSAL_DURATION)
+			activeBarsArray[activeBars]:SetValue(100)
+			activeBarsArray[activeBars]:SetWidth(VRA:getBarWidth())
+			activeBarsArray[activeBars]:SetHeight(VRA:getBarHeight())
+			if(vradb.growthDirection) then
+				activeBarsArray[activeBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),activeBars*VRA:getBarHeight()+VRA:getBarY())
+			else
+				activeBarsArray[activeBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-activeBars*VRA:getBarHeight()+VRA:getBarY())
+			end
+			activeBarsArray[activeBars]:SetStatusBarColor(0,1,0)
+		
+			activeBarsArray[activeBars].bg = activeBarsArray[activeBars]:CreateTexture(nil, "BACKGROUND")
+			activeBarsArray[activeBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+			activeBarsArray[activeBars].bg:SetAllPoints(true)
+			activeBarsArray[activeBars].bg:SetVertexColor(0, 0, 0)
+	
+		
+			local once = false
+			local once2 = false
+			local t = PROPOSAL_DURATION
+			local HALF_POINT = PROPOSAL_DURATION / 2
+			activeBarsArray[activeBars]:SetScript("OnUpdate", function(bar, elapsed)
+				t = t - elapsed
+				bar:SetValue(t)
+				if t > HALF_POINT then
+					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
+				else
+					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
+				end
+				bar:SetWidth(VRA:getBarWidth())
+				bar:SetHeight(VRA:getBarHeight())
+				text:SetFont(VRA:SetFont(VRA:getFontType()), VRA:getFontSize(), "OUTLINE")
+				local playerTemp = player
+				if(not once) then
+					playerSpell[player] = name
+					once = true
+				end
+				local dashPos = strfind(player,"-")
+				if(dashPos~=nil) then
+					player = strsub(player,1,dashPos)
+				end
+				text:SetText(player.." - "..name.."("..convertTime(t)..")")
+				activeBarsArray[activeBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBarTexture()))
+				
+				VRA:modifyBars()
+				for i=1,activeBars do
+					if(i>1) then
+						local min1,max1 = activeBarsArray[i]:GetMinMaxValues()
+						local min2,max2 = activeBarsArray[i-1]:GetMinMaxValues()
+						if((activeBarsArray[i]:GetValue()/max1)<(activeBarsArray[i-1]:GetValue()/max2)) then
+							if(vradb.growthDirection) then
+								activeBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),(i-1)*VRA:getBarHeight()+VRA:getBarY())
+								activeBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),(i)*VRA:getBarHeight()+VRA:getBarY())
+							else
+								activeBarsArray[i]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-(i-1)*VRA:getBarHeight()+VRA:getBarY())
+								activeBarsArray[i-1]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-(i)*VRA:getBarHeight()+VRA:getBarY())
+							end
+							local temp = activeBarsArray[i]
+							activeBarsArray[i] = activeBarsArray[i-1]
+							activeBarsArray[i-1] = temp
+						end
+					end
+				end
+				if t < 0.001 then
+					activeBars = activeBars-1
+					for i=1,activeBars do
+						activeBarsArray[i] = activeBarsArray[i+1]
+					end
+					if(not once2) then
+						playerSpell[playerTemp] = ""
+						once2 = true
+					end
+					text:SetText("")
+					VRA:modifyBars()
+					bar:Hide()
+					
+				end
+			end)
+		end
+	end
+end
+
 
 function VRA:ShowConfig()
 	InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("VocalRaidAssistant", "Title"))
@@ -18,6 +1005,24 @@ function VRA:ShowConfig()
 end
 
 function VRA:ChangeProfile()
+	if(activeBMove==1) then
+		for i=1,activeBBars do
+			activeBBarsArray[i]:Hide()
+		end
+		activeBMove = 0
+	end
+	if(activeOMove==1) then
+		for i=1,activeOBars do
+			activeOBarsArray[i]:Hide()
+		end
+		activeOMove = 0
+	end
+	if(activeMove==1) then
+		for i=1,activeBars do
+			activeBarsArray[i]:Hide()
+		end
+		activeMove = 0
+	end
 	vradb = self.db1.profile
 	for k,v in VocalRaidAssistant:IterateModules() do
 		if type(v.ChangeProfile) == 'function' then
@@ -29,6 +1034,21 @@ end
 function VRA:AddOption(name, keyName)
 	
 	return AceConfigDialog:AddToBlizOptions("VocalRaidAssistant", name, "VocalRaidAssistant", keyName)
+end
+
+function VRA:class(name)
+	if(name=="Death Knight") then return "|cffC41F3B"
+	elseif(name=="Druid") then return "|cffFF7D0A"
+	elseif(name=="Hunter") then return "|cffABD473"
+	elseif(name=="Mage") then return "|cff69CCF0"
+	elseif(name=="Monk") then return "|cFF558A84"
+	elseif(name=="Paladin") then return "|cffF58CBA"
+	elseif(name=="Priest") then return "|cffFFFFFF"
+	elseif(name=="Rogue") then return "|cffFFF569"
+	elseif(name=="Shaman") then return "|cff0070da"
+	elseif(name=="Warlock") then return "|cff9482C9"
+	elseif(name=="Warrior") then return "|cffC79C6E"
+	else return "" end
 end
 
 function VRA:UpdateRoster()
@@ -76,9 +1096,11 @@ function VRA:UpdateRoster()
 	
 	for i=1,raidMaxSize do
 		if GetRaidRosterInfo(i) ~= nil then
-			rosterNameArray[i] = GetRaidRosterInfo(i)
+			-- = GetRaidRosterInfo(i)
+			rosterNameArray[i], _, _, _, rosterClassArray[i], _, _, _, _, _, _ = GetRaidRosterInfo(i) 
 		else
 			rosterNameArray[i] = ""
+			rosterClassArray[i] = ""
 		end
 		
 	end
@@ -86,13 +1108,18 @@ function VRA:UpdateRoster()
 	for i=1,raidMaxSize do
 		local found = false
 		for j=1,raidMaxSize do
-			if(rosterNameArray[i] == rosterInfoArray[j]) then
-			found = true
-				if(rosterStatusOldArray[j] ~= nil) then
-					rosterStatusArray[i] = rosterStatusOldArray[j]
+			if(rosterInfoArray[i] ~= nil) then
+				if(rosterInfoArray[i] ~= strsub(rosterInfoArray[i],11).."") then
+					if(rosterNameArray[i] == strsub(rosterInfoArray[j],11)) then
+					found = true
+						if(rosterStatusOldArray[j] ~= nil) then
+							rosterStatusArray[i] = rosterStatusOldArray[j]
+						end
+					end
 				end
 			end
 		end
+		
 		if(not found and not first) then
 			rosterStatusArray[i] = false
 		end
@@ -105,7 +1132,7 @@ function VRA:UpdateRoster()
 	first = false
 	
 	for i=1,raidMaxSize do
-		rosterInfoArray[i] = rosterNameArray[i]
+		rosterInfoArray[i] = VRA:class(rosterClassArray[i]) .. rosterNameArray[i]
 		--rosterStatusOldArray[i] = rosterStatusArray[i]
 	end
 	
@@ -279,7 +1306,7 @@ function VRA:MakeCustomOption(key)
 					db[value] = db[key]
 					db[value].name = value
 					db[value].order = #db + 1
-					db[value].soundfilepath = "Interface\\VRASound\\"..value..".ogg"
+					db[value].soundfilepath = "Sound\Creature\AlgalonTheObserver\UR_Algalon_BHole01.ogg"
 					db[key] = nil
 					--makeoption(value)
 					options[value] = options[key]
@@ -314,13 +1341,15 @@ function VRA:MakeCustomOption(key)
 			existingsound = {
 				name = L["Use existing sound"],
 				type = 'toggle',
+				disabled = true,
 				order = 30,
 			},
 			existinglist = {
 				name = L["choose a sound"],
 				type = 'select',
 				dialogControl = 'LSM30_Sound',
-				values =  LSM:HashTable("sound"),
+				values =  AceGUIWidgetLSMlists.sound,
+				
 				disabled = function() return not db[key].existingsound end,
 				order = 40,
 			},
@@ -563,14 +1592,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC41F3BDeath Knight|r"],
 								order = 5,
-								args = listOption({},"auraApplied"),
+								args = listOption({48792,49028,55233},"auraApplied"),
 							},
 							druid = {
 								type = 'group',
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({29166,102342},"auraApplied"),	
+								args = listOption({29166,102342,22812,106922,61336},"auraApplied"),	
 							},
 							hunter = {
 								type = 'group',
@@ -591,14 +1620,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({116849},"auraApplied"),
+								args = listOption({116849,115203},"auraApplied"),
 							},
 							paladin = {
 								type = 'group',
 								inline = true,
 								name = L["|cffF58CBAPaladin|r"],
 								order = 10,
-								args = listOption({6940,1022},"auraApplied"),
+								args = listOption({6940,1022,86659,31850,498,642},"auraApplied"),
 							},
 							preist	= {
 								type = 'group',
@@ -633,7 +1662,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 15,
-								args = listOption({114030},"auraApplied"),	
+								args = listOption({114030,871,12975},"auraApplied"),	
 							},
 						},
 					},
@@ -727,7 +1756,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,114203,114207,122294},"castSuccess"),	
+								args = listOption({97462,114203,114207,122294,1160},"castSuccess"),	
 							},
 						},
 					},
@@ -745,6 +1774,381 @@ function VRA:OnOptionCreate()
 								order = 1,
 							},
 						}
+					},
+				},
+			},
+			CooldownBar = {
+				type = 'group',
+				name = "Cooldown Bar",
+				desc = "Cooldown Bar",
+				set = setOption,
+				get = getOption,
+				childGroups = "tab",
+				order = 3,
+				handler = VocalRaidAssistant,
+				args = {
+					barX = {
+						name = "barX",
+						desc = "barX",
+						type = 'input',
+						get = "getBarX",
+						set = "setBarX",
+						hidden = true,
+					},
+					barY = {
+						name = "barY",
+						desc = "barY",
+						type = 'input',
+						get = "getBarY",
+						set = "setBarY",
+						hidden = true,
+					},
+					heightX = {
+						name = "heightX",
+						desc = "heightX",
+						type = 'input',
+						get = "getHeightX",
+						set = "setHeightX",
+						hidden = true,
+					},
+					enableCooldownBar = {
+						name = "Enable",
+						desc = "Enable Cooldown Bar (Only Works in Raid Group)",
+						type = 'toggle',
+						order = 1,
+						handler = VocalRaidAssistant,
+					},
+					moveBars = {
+						name = "Move me!",
+						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
+						type = 'execute',
+						func = function() 
+							VRA:MoveBar("COOLDOWN BAR!",20)
+							--VRA:CreateBar("Nitrak","97462")
+						end,
+						handler = VocalRaidAssistant,
+					},
+					--forcetest = {
+					--	name = "TEST!",
+					--	desc = "TEST!",
+					--	type = 'execute',
+					--	func = function() 
+					--			VRA:CreateBar("Coza","97462")
+					--	end,
+					--	handler = VocalRaidAssistant,
+					--},
+					BarSettings = {
+						type = 'group',
+						name = "Bar Settings",
+						desc = "Bar Settings",
+						inline = true,
+						order = -2,
+						args = {
+							barWidth = {
+								type = 'range',
+								max = 600,
+								min = 1,
+								step = 1,
+								name = "Bar Width",
+								desc = "Adjust Bar Width",
+								get = "getBarWidth",
+								order = 1,
+							},
+							barHeight = {
+								type = 'range',
+								max = 75,
+								min = 1,
+								step = 1,
+								name = "Bar Height",
+								desc = "Adjust Bar Height",
+								get = "getBarHeight",
+								order = 2,
+							},
+							fontSize = {
+								type = 'range',
+								max = 28,
+								min = 1,
+								step = 1,
+								name = "Font Size",
+								desc = "Adjust Font Size",
+								get = "getFontSize",
+								order = 3,
+							},
+							fontType = {
+								name = "Set Font",
+								desc = "Set Font Type",
+								type = "select",
+								dialogControl = 'LSM30_Font',
+								get = "getFontType",
+								values = AceGUIWidgetLSMlists.font,
+								order = 4,
+							},
+							barTexture = {
+								type = 'select',
+								dialogControl = 'LSM30_Statusbar',
+								name = "Set Bar Texture",
+								desc = "Set Bar Texture",
+								values = AceGUIWidgetLSMlists.statusbar,
+								get = "getBarTexture",
+								order=5,
+							},
+							growthDirection = {
+								type = 'toggle',
+								name = "Growth Direction",
+								desc = "Active = UP \nDisabled = DOWN",
+								order=6,
+							},
+						},
+					},
+				},
+			},
+			BuffBar = {
+				type = 'group',
+				name = "Buff Bar",
+				desc = "Buff Bar",
+				set = setOption,
+				get = getOption,
+				childGroups = "tab",
+				order = 3,
+				handler = VocalRaidAssistant,
+				args = {
+					bbarX = {
+						name = "bbarX",
+						desc = "bbarX",
+						type = 'input',
+						get = "getBBarX",
+						set = "setBBarX",
+						hidden = true,
+					},
+					bbarY = {
+						name = "bbarY",
+						desc = "bbarY",
+						type = 'input',
+						get = "getBBarY",
+						set = "setBBarY",
+						hidden = true,
+					},
+					bheightX = {
+						name = "bheightX",
+						desc = "bheightX",
+						type = 'input',
+						get = "getBHeightX",
+						set = "setBHeightX",
+						hidden = true,
+					},
+					enableBCooldownBar = {
+						name = "Enable",
+						desc = "Enable Buff Bar (Only Works in Raid Group)",
+						type = 'toggle',
+						order = 1,
+						handler = VocalRaidAssistant,
+					},
+					moveBBars = {
+						name = "Move me!",
+						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
+						type = 'execute',
+						func = function() 
+							VRA:MoveBBar("DEFENSIVE BUFF BAR!",20)
+							--VRA:CreateBar("Nitrak","97462")
+						end,
+						handler = VocalRaidAssistant,
+					},
+					--forceBtest = {
+					--	name = "TEST!",
+					--	desc = "TEST!",
+					--	type = 'execute',
+					--	func = function() 
+					--			VRA:CreateBBar("Coza","97462")
+					--	end,
+					--	handler = VocalRaidAssistant,
+					--},
+					bBarSettings = {
+						type = 'group',
+						name = "Bar Settings",
+						desc = "Bar Settings",
+						inline = true,
+						order = -2,
+						args = {
+							bbarWidth = {
+								type = 'range',
+								max = 600,
+								min = 1,
+								step = 1,
+								name = "Bar Width",
+								desc = "Adjust Bar Width",
+								get = "getBBarWidth",
+								order = 1,
+							},
+							bbarHeight = {
+								type = 'range',
+								max = 75,
+								min = 1,
+								step = 1,
+								name = "Bar Height",
+								desc = "Adjust Bar Height",
+								get = "getBBarHeight",
+								order = 2,
+							},
+							bfontSize = {
+								type = 'range',
+								max = 28,
+								min = 1,
+								step = 1,
+								name = "Font Size",
+								desc = "Adjust Font Size",
+								get = "getBFontSize",
+								order = 3,
+							},
+							bfontType = {
+								name = "Set Font",
+								desc = "Set Font Type",
+								type = "select",
+								dialogControl = 'LSM30_Font',
+								get = "getBFontType",
+								values = AceGUIWidgetLSMlists.font,
+								order = 4,
+							},
+							bbarTexture = {
+								type = 'select',
+								dialogControl = 'LSM30_Statusbar',
+								name = "Set Bar Texture",
+								desc = "Set Bar Texture",
+								values = AceGUIWidgetLSMlists.statusbar,
+								get = "getBBarTexture",
+								order=5,
+							},
+							bgrowthDirection = {
+								type = 'toggle',
+								name = "Growth Direction",
+								desc = "Active = UP \nDisabled = DOWN",
+								order=6,
+							},
+						},
+					},
+				},
+			},
+			OffensiveCooldownBar = {
+				type = 'group',
+				name = "Offensive Cooldown Bar",
+				desc = "Offensive Cooldown Bar",
+				set = setOption,
+				get = getOption,
+				childGroups = "tab",
+				order = 3,
+				handler = VocalRaidAssistant,
+				args = {
+					obarX = {
+						name = "obarX",
+						desc = "obarX",
+						type = 'input',
+						get = "getOBarX",
+						set = "setOBarX",
+						hidden = true,
+					},
+					obarY = {
+						name = "obarY",
+						desc = "obarY",
+						type = 'input',
+						get = "getOBarY",
+						set = "setOBarY",
+						hidden = true,
+					},
+					oheightX = {
+						name = "oheightX",
+						desc = "oheightX",
+						type = 'input',
+						get = "getOHeightX",
+						set = "setOHeightX",
+						hidden = true,
+					},
+					enableOCooldownBar = {
+						name = "Enable",
+						desc = "Enable Cooldown Bar (Only Works in Raid Group)",
+						type = 'toggle',
+						order = 1,
+						handler = VocalRaidAssistant,
+					},
+					moveOBars = {
+						name = "Move me!",
+						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
+						type = 'execute',
+						func = function() 
+							VRA:MoveOBar("OFFENSIVE BUFF BAR!",20)
+							--VRA:CreateBar("Nitrak","97462")
+						end,
+						handler = VocalRaidAssistant,
+					},
+					--forceOtest = {
+					--	name = "TEST!",
+					--	desc = "TEST!",
+					--	type = 'execute',
+					--	func = function() 
+					--			VRA:CreateOBar("Coza","114207")
+					--	end,
+					--	handler = VocalRaidAssistant,
+					--},
+					oBarSettings = {
+						type = 'group',
+						name = "Bar Settings",
+						desc = "Bar Settings",
+						inline = true,
+						order = -2,
+						args = {
+							obarWidth = {
+								type = 'range',
+								max = 600,
+								min = 1,
+								step = 1,
+								name = "Bar Width",
+								desc = "Adjust Bar Width",
+								get = "getOBarWidth",
+								order = 1,
+							},
+							obarHeight = {
+								type = 'range',
+								max = 75,
+								min = 1,
+								step = 1,
+								name = "Bar Height",
+								desc = "Adjust Bar Height",
+								get = "getOBarHeight",
+								order = 2,
+							},
+							ofontSize = {
+								type = 'range',
+								max = 28,
+								min = 1,
+								step = 1,
+								name = "Font Size",
+								desc = "Adjust Font Size",
+								get = "getOFontSize",
+								order = 3,
+							},
+							ofontType = {
+								name = "Set Font",
+								desc = "Set Font Type",
+								type = "select",
+								dialogControl = 'LSM30_Font',
+								get = "getOFontType",
+								values = AceGUIWidgetLSMlists.font,
+								order = 4,
+							},
+							obarTexture = {
+								type = 'select',
+								dialogControl = 'LSM30_Statusbar',
+								name = "Set Bar Texture",
+								desc = "Set Bar Texture",
+								values = AceGUIWidgetLSMlists.statusbar,
+								get = "getOBarTexture",
+								order=5,
+							},
+							ogrowthDirection = {
+								type = 'toggle',
+								name = "Growth Direction",
+								desc = "Active = UP \nDisabled = DOWN",
+								order=6,
+							},
+						},
 					},
 				},
 			},
@@ -1086,6 +2490,15 @@ function VRA:OnOptionCreate()
 							},
 						},
 					},
+					forcerefresh = {
+						name = "Force refresh",
+						desc = "Force refresh of roster (If for some reason it is wrong)",
+						type = 'execute',
+						func = function() 
+							self:UpdateRoster() 
+						end,
+						handler = VocalRaidAssistant,
+					},
 				},
 			},
 			custom = {
@@ -1139,7 +2552,10 @@ function VRA:OnOptionCreate()
 	self.options.args.profiles.order = -1
 	
 	self:AddOption(L["Abilities"], "spells")
-	self:AddOption("Individual Assingment", "IndividualAssingment")
+	self:AddOption("Individual Assignment", "IndividualAssingment")
+	self:AddOption("Cooldown Bar", "CooldownBar")
+	self:AddOption("Defensive Buff Bar", "BuffBar")
+	self:AddOption("Offensive Buff Bar", "OffensiveCooldownBar")
 	self:AddOption(L["Custom"], "custom")
 	self:AddOption(L["Profiles"], "profiles")
 end

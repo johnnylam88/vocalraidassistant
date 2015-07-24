@@ -1,3 +1,22 @@
+Version 1.0.5
+Added Defensive Cooldown Tracker
+Added Offensive Cooldown Tracker
+Added class color to Individual Buff
+Added abilities:
+  - Icebound Fortitude
+  - Dancing Rune Weapon
+  - Vampiric Blood
+  - Barkskin
+  - Might of Ursoc
+  - Survival Instincts
+  - Fortifying Brew
+  - Guardian of Ancient Kings
+  - Argent Defender
+  - Divine Protection
+  - Divine Shield
+  - Shield Wall
+  - Last Stand
+  - Demoralizing Shout
 Version 1.0.4
 Added "Individual Buff" feature
 Added abilities:

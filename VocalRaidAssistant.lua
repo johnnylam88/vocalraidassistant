@@ -73,11 +73,61 @@ local dbDefaults = {
 		smartDisable = false,
 		
 		
+		barX = GetScreenWidth()-200,
+		barY = GetScreenHeight(),
+		heightX = 20,
+		barWidth = 200,
+		barHeight = 20,
+		fontSize = 11,
+		fontType = "Friz Quadrata TT",
+		barTexture = "Blizzard",
+		
+		enableCooldownBar = false,
+		growthDirection = true,
+		
+		obarX = GetScreenWidth()+200,
+		obarY = GetScreenHeight(),
+		oheightX = 20,
+		obarWidth = 200,
+		obarHeight = 20,
+		ofontSize = 11,
+		ofontType = "Friz Quadrata TT",
+		obarTexture = "Blizzard",
+		
+		oenableCooldownBar = false,
+		ogrowthDirection = true,
+		
+		bbarX = GetScreenWidth(),
+		bbarY = GetScreenHeight(),
+		bheightX = 20,
+		bbarWidth = 200,
+		bbarHeight = 20,
+		bfontSize = 11,
+		bfontType = "Friz Quadrata TT",
+		bbarTexture = "Blizzard",
+		
+		benableCooldownBar = false,
+		bgrowthDirection = true,
+		
 		aruaApplied = false,
 		aruaRemoved = false,
 		castStart = false,
 		castSuccess = false,
 		interrupt = false,
+		
+		icebound = false,
+		dancingruneweapon = false,
+		vampiricblood = false,
+		barkskin = false,
+		mightofursoc = false,
+		survivalinstincts = false,
+		guardianofancientkings = false,
+		argentdefender = false,
+		divineprotection = false,
+		divineshield = false,
+		shieldwall = false,
+		laststand = false,
+		demoralizingshout = false,
 		
 		innervate = false,
 		misdirection = false,
@@ -118,6 +168,52 @@ function VocalRaidAssistant:OnInitialize()
 	self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
 	vradb = self.db1.profile
 	
+	
+	-- Register some SharedMedia goodies.
+		LSM:Register("font", "Adventure",				[[Interface\Addons\VocalRaidAssistant\fonts\Adventure.ttf]])
+		LSM:Register("font", "ABF",					[[Interface\Addons\VocalRaidAssistant\fonts\ABF.ttf]])
+		LSM:Register("font", "Vera Serif",			[[Interface\Addons\VocalRaidAssistant\fonts\VeraSe.ttf]])
+		LSM:Register("font", "Diablo",				[[Interface\Addons\VocalRaidAssistant\fonts\Avqest.ttf]])
+		LSM:Register("font", "Accidental Presidency",	[[Interface\Addons\VocalRaidAssistant\fonts\Accidental Presidency.ttf]])
+		LSM:Register("statusbar", "Aluminium",		[[Interface\Addons\VocalRaidAssistant\statusbar\Aluminium]])
+		LSM:Register("statusbar", "Armory",			[[Interface\Addons\VocalRaidAssistant\statusbar\Armory]])
+		LSM:Register("statusbar", "BantoBar",			[[Interface\Addons\VocalRaidAssistant\statusbar\BantoBar]])
+		LSM:Register("statusbar", "Glaze",			[[Interface\Addons\VocalRaidAssistant\statusbar\Glaze]])
+		LSM:Register("statusbar", "Glaze2",			[[Interface\Addons\VocalRaidAssistant\statusbar\Glaze2]])
+		LSM:Register("statusbar", "Gloss",			[[Interface\Addons\VocalRaidAssistant\statusbar\Gloss]])
+		LSM:Register("statusbar", "Graphite",			[[Interface\Addons\VocalRaidAssistant\statusbar\Graphite]])
+		LSM:Register("statusbar", "Grid",				[[Interface\Addons\VocalRaidAssistant\statusbar\Grid]])
+		LSM:Register("statusbar", "Healbot",			[[Interface\Addons\VocalRaidAssistant\statusbar\Healbot]])
+		LSM:Register("statusbar", "LiteStep",			[[Interface\Addons\VocalRaidAssistant\statusbar\LiteStep]])
+		LSM:Register("statusbar", "Minimalist",		[[Interface\Addons\VocalRaidAssistant\statusbar\Minimalist]])
+		LSM:Register("statusbar", "Otravi",			[[Interface\Addons\VocalRaidAssistant\statusbar\Otravi]])
+		LSM:Register("statusbar", "Outline",			[[Interface\Addons\VocalRaidAssistant\statusbar\Outline]])
+		LSM:Register("statusbar", "Perl",				[[Interface\Addons\VocalRaidAssistant\statusbar\Perl]])
+		LSM:Register("statusbar", "Smooth",			[[Interface\Addons\VocalRaidAssistant\statusbar\Smooth]])
+		LSM:Register("statusbar", "Round",			[[Interface\Addons\VocalRaidAssistant\statusbar\Round]])
+		LSM:Register("statusbar", "TukTex",			[[Interface\Addons\VocalRaidAssistant\statusbar\normTex]])
+		LSM:Register("statusbar", "Frost",			[[Interface\Addons\VocalRaidAssistant\statusbar\Frost]])
+		LSM:Register("statusbar", "Xeon",			[[Interface\Addons\VocalRaidAssistant\statusbar\Xeon]])
+		LSM:Register("statusbar", "Runes",			[[Interface\Addons\VocalRaidAssistant\statusbar\Runes]])
+		LSM:Register("statusbar", "Rocks",			[[Interface\Addons\VocalRaidAssistant\statusbar\Rocks]])
+		
+		-- Some sounds (copied from Omen).
+		LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.wav]])
+		LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.wav]])
+		LSM:Register("sound", "Explosion", [[Sound\Doodad\Hellfire_Raid_FX_Explosion05.wav]])
+		LSM:Register("sound", "Shing!", [[Sound\Doodad\PortcullisActive_Closed.wav]])
+		LSM:Register("sound", "Wham!", [[Sound\Doodad\PVP_Lordaeron_Door_Open.wav]])
+		LSM:Register("sound", "Simon Chime", [[Sound\Doodad\SimonGame_LargeBlueTree.wav]])
+		LSM:Register("sound", "War Drums", [[Sound\Event Sounds\Event_wardrum_ogre.wav]])
+		LSM:Register("sound", "Cheer", [[Sound\Event Sounds\OgreEventCheerUnique.wav]])
+		LSM:Register("sound", "Humm", [[Sound\Spells\SimonGame_Visual_GameStart.wav]])
+		LSM:Register("sound", "Short Circuit", [[Sound\Spells\SimonGame_Visual_BadPress.wav]])
+		LSM:Register("sound", "Fel Portal", [[Sound\Spells\Sunwell_Fel_PortalStand.wav]])
+		LSM:Register("sound", "Fel Nova", [[Sound\Spells\SeepingGaseous_Fel_Nova.wav]])
+		LSM:Register("sound", "You Will Die!", [[Sound\Creature\CThun\CThunYouWillDie.wav]])
+		LSM:Register("sound", "Beware", [[Sound\Creature\AlgalonTheObserver\UR_Algalon_BHole01.ogg]])
+	
+	
 	local options = {
 		name = "Vocal Raid Assistant",
 		desc = L["PVE Voice Alert"],
@@ -149,13 +245,53 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = L["ABILITIES_DESCRIPTION"],
 					},
-					custom = {
+					individual = {
 						order = 5,
 						type = "header",
-						name = L["CUSTOM_ABILITIES_HEADER"],
+						name = L["INDIVIDUAL_HEADER"],
 					},
 					desc3 = {
 						order = 6,
+						type = "description",
+						name = L["ASSINGMENT_DESCRIPTION"],
+					},
+					cooldown = {
+						order = 7,
+						type = "header",
+						name = L["COOLDOWN_HEADER"],
+					},
+					desc4 = {
+						order = 8,
+						type = "description",
+						name = L["COOLDOWN_DESCRIPTION"],
+					},
+					defbuff = {
+						order = 9,
+						type = "header",
+						name = L["DEF_BUFF_HEADER"],
+					},
+					desc5 = {
+						order = 10,
+						type = "description",
+						name = L["DEF_BUFF_DESCRIPTION"],
+					},
+					offbuff = {
+						order = 11,
+						type = "header",
+						name = L["OFF_BUFF_HEADER"],
+					},
+					desc6 = {
+						order = 12,
+						type = "description",
+						name = L["OFF_BUFF_DESCRIPTION"],
+					},
+					custom = {
+						order = 13,
+						type = "header",
+						name = L["CUSTOM_ABILITIES_HEADER"],
+					},
+					desc7 = {
+						order = 14,
 						type = "description",
 						name = L["CUSTOM_ABILITIES_DESCRIPTION"],
 					},
@@ -171,6 +307,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header5 = {
+							order = -10,
+							type = "header",
+							name = "1.0.5",
+					},
+					desc5 = {
+						order	= -9,
+						type	= "description",
+						name	= L["1.0.5 Changelog"],
 					},
 					header4 = {
 							order = -8,
@@ -369,9 +515,15 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 					if(vradb.buffAppliedTank) then
 						if(self:isTankSpec(destName)) then
 							self:PlaySpell("auraApplied", spellID)
+							if(vradb.enableBCooldownBar) then
+								VRA:CreateBBar(sourceName,spellID)
+							end
 						end
 					else
 						self:PlaySpell("auraApplied", spellID)
+						if(vradb.enableBCooldownBar) then
+							VRA:CreateBBar(sourceName,spellID)
+						end
 					end
 				end
 			else
@@ -387,6 +539,9 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 			if(IsInRaid()) then
 				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
+					if(vradb.enableBCooldownBar) then
+						VRA:CreateBBar(sourceName,spellID)
+					end
 				end
 			else
 				self:PlaySpell("auraApplied", spellID)
@@ -399,9 +554,17 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 					if(vradb.buffAppliedTank) then
 						if(self:isTankSpec(destName)) then
 							self:PlaySpell("auraApplied", spellID)
+							if(vradb.enableBCooldownBar) then
+								if(spellID ~= 97462) then
+									VRA:CreateBBar(sourceName,spellID)
+								end
+							end
 						end
 					else
 						self:PlaySpell("auraApplied", spellID)
+						if(vradb.enableBCooldownBar) then
+							VRA:CreateBBar(sourceName,spellID)
+						end
 					end
 				end
 			else
@@ -417,6 +580,9 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 			if(IsInRaid()) then
 				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
+					if(vradb.enableBCooldownBar) then
+						VRA:CreateBBar(sourceName,spellID)
+					end
 				end
 			else
 				self:PlaySpell("auraApplied", spellID)
@@ -449,6 +615,15 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 			if(vradb.onlyRaidGroup) then
 				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
 					self:PlaySpell("castSuccess", spellID)
+					if(vradb.enableCooldownBar) then
+						VRA:CreateBar(sourceName,spellID)
+					end
+					if(vradb.enableOCooldownBar) then
+						VRA:CreateOBar(sourceName,spellID)
+					end
+					if(vradb.enableBCooldownBar) then
+						VRA:CreateBBar(sourceName,spellID)
+					end
 				end
 			else
 				self:PlaySpell("castSuccess", spellID)
