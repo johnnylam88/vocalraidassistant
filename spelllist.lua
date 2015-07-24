@@ -1,4 +1,4 @@
-﻿function VocalRaidAssistant:GetSpellList ()
+function VocalRaidAssistant:GetSpellList ()
 	return {
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
