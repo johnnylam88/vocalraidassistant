@@ -2062,14 +2062,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC41F3BDeath Knight|r"],
 								order = 5,
-								args = listOption({48792,49028,55233,49016},"auraApplied"),
+								args = listOption({48792,49028,55233},"auraApplied"),
 							},
 							druid = {
 								type = 'group',
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({29166,102342,22812,106922,61336},"auraApplied"),	
+								args = listOption({102342,22812,61336,155835},"auraApplied"),	
 							},
 							hunter = {
 								type = 'group',
@@ -2097,7 +2097,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffF58CBAPaladin|r"],
 								order = 10,
-								args = listOption({6940,1022,86659,31850,498,642},"auraApplied"),
+								args = listOption({6940,1022,86659,31850,498,642,31842},"auraApplied"),
 							},
 							preist	= {
 								type = 'group',
@@ -2118,7 +2118,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cff0070daShaman|r"],
 								order = 13,
-								args = listOption({},"auraApplied"),
+								args = listOption({165344},"auraApplied"),
 							},
 							warlock	= {
 								type = 'group',
@@ -2163,28 +2163,28 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({740,110707,106898,77764,77761,20484},"castSuccess"),
+								args = listOption({740,106898,77764,77761,20484},"castSuccess"),
 							},
 							hunter = {
 								type = 'group',
 								inline = true,
 								name = L["|cffABD473Hunter|r"],
 								order = 7,
-								args = listOption({90355},"castSuccess"),
+								args = listOption({90355,172106},"castSuccess"),
 							},
 							mage = {
 								type = 'group',
 								inline = true,
 								name = L["|cff69CCF0Mage|r"],
 								order = 8,
-								args = listOption({80353},"castSuccess"),
+								args = listOption({80353,159916},"castSuccess"),
 							},
 							monk = {
 								type = 'group',
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({115213,115310},"castSuccess"),
+								args = listOption({115310},"castSuccess"),
 							},
 							paladin = {
 								type = 'group',
@@ -2198,7 +2198,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFFFFFFPriest|r"],
 								order = 110,
-								args = listOption({64843,64901,62618,32375,113277,15286},"castSuccess"),
+								args = listOption({64843,62618,32375,15286},"castSuccess"),
 							},
 							rogue = {
 								type = 'group',
@@ -2212,7 +2212,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cff0070daShaman|r"],
 								order = 112,
-								args = listOption({2825,32182,108280,98008,16190,120668},"castSuccess"),
+								args = listOption({2825,32182,108280,98008},"castSuccess"),
 							},
 							warlock = {
 								type = 'group',
@@ -2226,7 +2226,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,114203,114207,122294,1160,64382},"castSuccess"),	
+								args = listOption({97462,1160,64382},"castSuccess"),	
 							},
 						},
 					},
@@ -2296,8 +2296,6 @@ function VRA:OnOptionCreate()
 						disabled = function() if(vradb.enableCooldownBar) then return false else VRA:ClearBars() return true end end,
 						func = function() 
 							VRA:MoveBar("COOLDOWN BAR!",20)
-							--vradb.spells["29166"] = newSpellTable()
-							--self:AddDataOption("29166")
 							--vradb.spells["1022"] = newSpellTable()
 							--self:AddDataOption("1022")
 							--VRA:CreateBar("Damista","97462")
@@ -2317,7 +2315,6 @@ function VRA:OnOptionCreate()
 								VRA:CreateBar("Druid","740")
 								VRA:CreateBar("Death Knight","51052")
 								VRA:CreateBar("Paladin","31821")
-								VRA:CreateBar("Monk","115213")
 								VRA:CreateBar("Warrior","97462")
 								VRA:CreateBar("Shaman","108280")
 						end,
@@ -2335,7 +2332,6 @@ function VRA:OnOptionCreate()
 								VRA:CreateBar("Druid","740")
 								VRA:CreateBar("Death Knight","51052")
 								VRA:CreateBar("Paladin","31821")
-								VRA:CreateBar("Monk","115213")
 								VRA:CreateBar("Warrior","97462")
 								VRA:CreateBar("Warrior","108280")
 						end,
@@ -2555,7 +2551,6 @@ function VRA:OnOptionCreate()
 								VRA:CreateBBar("Rogue","76577")
 								VRA:CreateBBar("Warrior","97462")
 								VRA:CreateBBar("Shaman","98008")
-								--VRA:CreateBBar("Monk","115213")
 						 end,
 						 handler = VocalRaidAssistant,
 					},
@@ -2574,7 +2569,6 @@ function VRA:OnOptionCreate()
 								VRA:CreateBBar("Rogue","76577")
 								VRA:CreateBBar("Warrior","97462")
 								VRA:CreateBBar("Shaman","98008")
-								VRA:CreateBBar("Monk","115213")
 						 end,
 						 handler = VocalRaidAssistant,
 					},
@@ -2754,10 +2748,7 @@ function VRA:OnOptionCreate()
 						disabled = function() if(vradb.enableOCooldownBar) then return false else return true end end,
 						func = function() 
 								VRA:CreateOBar("Mage","80353")
-								VRA:CreateOBar("Shaman","120668")
 								VRA:CreateOBar("Rogue","57934")
-								VRA:CreateOBar("Death Knight","49016","personal")
-								VRA:CreateOBar("Warrior","114207")
 						end,
 						handler = VocalRaidAssistant,
 					},
@@ -2769,8 +2760,6 @@ function VRA:OnOptionCreate()
 						hidden = not testingactive,
 						func = function() 
 								VRA:CreateOBar("Mage","80353")
-								VRA:CreateOBar("Shaman","120668")
-								VRA:CreateOBar("Warrior","114207")
 						end,
 						handler = VocalRaidAssistant,
 					},

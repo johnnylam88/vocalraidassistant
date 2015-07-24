@@ -128,6 +128,7 @@ local dbDefaults = {
 		dancingruneweapon = false,
 		vampiricblood = false,
 		barkskin = false,
+		bristlingfur = false,
 		mightofursoc = false,
 		survivalinstincts = false,
 		guardianofancientkings = false,
@@ -139,7 +140,8 @@ local dbDefaults = {
 		demoralizingshout = false,
 		shatteringthrow = false,
 		
-		innervate = false,
+		avengingwrath = false,
+		ascendance = false,
 		misdirection = false,
 		tricksofthetrade = false,
 		bloodlust = false,
@@ -147,7 +149,6 @@ local dbDefaults = {
 		ancienthysteria = false,
 		timewarp = false,
 		massdispel = false,
-		smassdispel = false,
 		soulstone = false,
 		rebirth = false,
 		raiseally = false,
@@ -317,6 +318,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header10 = {
+							order = -20,
+							type = "header",
+							name = "1.1.0",
+					},
+					desc10 = {
+						order	= -19,
+						type	= "description",
+						name	= L["1.1.0 Changelog"],
 					},
 					header9 = {
 							order = -18,

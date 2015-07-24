@@ -1,3 +1,11 @@
+Version 1.1.0
+Removed spells which Patch 6.0.2 removed
+Added abilities:
+  - Bristling Fur
+  - Aspect of the Fox
+  - Amplifying Magic
+  - Avenging Wrath (Holy)
+  - Ascendance (Resto)
 Version 1.0.9
 Fixed a bug where you could not move the Cooldownbar
 Now cooldowns that reset on boss kill/wipe will be reset on Cooldownbar

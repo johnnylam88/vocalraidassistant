@@ -13,12 +13,6 @@
 			class = "DRUID",
 			cd = 8*60,
 		},
-		[115213] = {
-			desc = "",
-			type = "premade",
-			class = "MONK",
-			cd = 3*60,
-		},
 		[115310] = {
 			desc = "",
 			type = "premade",
@@ -36,12 +30,6 @@
 			type = "premade",
 			class = "PRIEST",
 			cd = 3*60,
-		},
-		[64901] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			cd = 6*60,
 		},
 		[62618] = {
 			desc = "",
@@ -73,23 +61,17 @@
 			class = "SHAMAN",
 			cd = 3*60,
 		},
-		[16190] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			cd = 3*60,
-		},
 		[97462] = {
 			desc = "",
 			type = "premade",
 			class = "WARRIOR",
 			cd = 3*60,
 		},
-		[114203] = {
+		[159916] = {
 			desc = "",
 			type = "premade",
-			class = "WARRIOR",
-			cd = 3*60,
+			class = "MAGE",
+			cd = 2*60,
 		},
 	}
 end
@@ -97,18 +79,6 @@ end
 function VocalRaidAssistant:GetBarDataO() 
 	return {
 	
-		[114207] = {
-			desc = "",
-			type = "premade",
-			class = "WARRIOR",
-			duration = 10,
-		},
-		[120668] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 10,
-		},
 		[90355] = {
 			desc = "",
 			type = "premade",
@@ -138,6 +108,12 @@ function VocalRaidAssistant:GetBarDataO()
 			type = "premade",
 			class = "WARRIOR",
 			duration = 10,
+		},
+		[172106] = {
+			desc = "",
+			type = "premade",
+			class = "HUNTER",
+			duration = 6,
 		},
 	}
 end	
@@ -205,23 +181,17 @@ function VocalRaidAssistant:GetBarDataB()
 			class = "SHAMAN",
 			duration = 6,
 		},
-		[16190] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 16,
-		},
 		[97462] = {
 			desc = "",
 			type = "premade",
 			class = "WARRIOR",
 			duration = 10,
 		},
-		[114203] = {
+		[159916] = {
 			desc = "",
 			type = "premade",
-			class = "WARRIOR",
-			duration = 15,
+			class = "MAGE",
+			duration = 6,
 		},
 	}
 end	
@@ -233,11 +203,10 @@ function VocalRaidAssistant:GetSpellList ()
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
 			--druid
-			[29166] = "innervate",
 			[102342] = "ironbark",
 			[22812] = "barkskin",
-			[106922] = "mightofursoc",
 			[61336] = "survivalinstincts",
+			[155835] = "bristlingfur", --guardian
 
 			--paladin
 			[1022] = "handOfProtection", 
@@ -246,6 +215,7 @@ function VocalRaidAssistant:GetSpellList ()
 			[31850] = "ardentdefender",
 			[498] = "divineprotection",
 			[642] = "divineshield",
+			[31842] = "avengingwrath",
 			--rogue
 			[57934] = "tricksofthetrade",
 			--warrior
@@ -258,14 +228,13 @@ function VocalRaidAssistant:GetSpellList ()
 			[47788] = "guardianSpirit",
 			
 			--shaman
-			
+			[165344] = "ascendance",
 			--mage
 			
 			--dk
 			[48792] = "icebound",
 			[49028] = "dancingruneweapon",
 			[55233] = "vampiricblood",
-			[49016] = "unholyfrenzy",
 			--hunter
 			[34477] = "misdirection",
 			[53480] = "roarofsacrifice",
@@ -284,11 +253,11 @@ function VocalRaidAssistant:GetSpellList ()
 		castSuccess = {					--cast success [spellid] = ".mp3 file name",
 			--druid
 			[740] = "tranquility",
-			[110707] = "smassdispel",
 			[106898] = "stampedingRoar",
 			[77764] = "stampedingRoar", --cat
 			[77761] = "stampedingRoar", --bear
 			[20484] = "rebirth",
+
 			
 			--paladin	
 			[31821] = "devotionaura",
@@ -299,36 +268,31 @@ function VocalRaidAssistant:GetSpellList ()
 
 			--warrior
 			[97462] = "rallyingCry", 
-			[114207] = "skullBanner",
-			[114203] = "demoralizingBanner",
-			[122294] = "sstampedingshout",
 			[1160] = "demoralizingshout",
 			[64382] = "shatteringthrow",
 			--priest
 			[64843] = "divineHymn",
-			[64901] = "hymnOfHope",
 			[62618] = "barrier",
 			[32375] = "massdispel",
-			[113277] = "stranquility",
 			[15286] = "vampiricembrace",
 			--shaman
-			[16190] = "ManaTide",
 			[98008] = "spiritlinktotem",
 			[108280] = "healingTide",
-			[120668] = "stormlash",
 			[2825] = "bloodLust",
 			[32182] = "heroism",
+			
 			--mage
 			[80353] = "timewarp",
+			[159916] = "amplifymagic",
 			--dk
 			[51052] = "antiMagicZone",
 			[61999] = "raiseally",
 			--hunter
 			[90355] = "ancienthysteria",
+			[172106] = "aspectofthefox",
 			--warlock
 			[20707] = "soulstone",
 			-- monk
-			[115213] = "avertHarm",
 			[115310] = "Revival",
 			
 		},
