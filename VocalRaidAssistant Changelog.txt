@@ -1,0 +1,5 @@
+Version 1.0.1
+Fixed raid was not toggled as default
+Added abilities:
+  - Innervate
+Fixed multiple appliances of buff (Like Stampede and Avert Harm)

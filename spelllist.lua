@@ -3,9 +3,7 @@
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
 			--druid
-			[106898] = "stampedingRoar",
-			[77764] = "stampedingRoar", --cat
-			[77761] = "stampedingRoar", --bear
+			[29166] = "innervate",
 
 			--paladin
 			[1022] = "handOfProtection", 
@@ -15,7 +13,6 @@
 			
 			--warrior
 			[114030] = "vigilance",
-			[122294] = "sstampedingshout",
 
 			--preist
 			[33206] = "painSuppression", 
@@ -33,7 +30,7 @@
 			--lock
 			
 			--monk
-			[115213] = "avertHarm",
+			
 			[116849] = "lifeCocoon",
 		},
 		auraRemoved = {					-- aura removed [spellid] = ".mp3 file name",
@@ -45,8 +42,10 @@
 		castSuccess = {					--cast success [spellid] = ".mp3 file name",
 			--druid
 			[740] = "tranquility",
-			[29166] = "innervate",
 			[110707] = "smassdispel",
+			[106898] = "stampedingRoar",
+			[77764] = "stampedingRoar", --cat
+			[77761] = "stampedingRoar", --bear
 			
 			--paladin	
 			[31821] = "auraMastery",
@@ -59,6 +58,7 @@
 			[97462] = "rallyingCry", 
 			[114207] = "skullBanner",
 			[114203] = "demoralizingBanner",
+			[122294] = "sstampedingshout",
 			--priest
 			[64843] = "divineHymn",
 			[64901] = "hymnOfHope",
@@ -80,7 +80,7 @@
 			--warlock
 			
 			-- monk
-				-- Mist of pandaria
+			[115213] = "avertHarm",
 			[115310] = "revival",
 			
 		},

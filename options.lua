@@ -349,7 +349,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({106898,77764,77761},"auraApplied"),	
+								args = listOption({29166},"auraApplied"),	
 							},
 							hunter = {
 								type = 'group',
@@ -370,7 +370,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({115213,116849},"auraApplied"),
+								args = listOption({116849},"auraApplied"),
 							},
 							paladin = {
 								type = 'group',
@@ -412,7 +412,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 15,
-								args = listOption({114030,122294},"auraApplied"),	
+								args = listOption({114030},"auraApplied"),	
 							},
 						},
 					},
@@ -443,7 +443,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({740,110707},"castSuccess"),
+								args = listOption({740,110707,106898,77764,77761},"castSuccess"),
 							},
 							hunter = {
 								type = 'group',
@@ -464,7 +464,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({},"castSuccess"),
+								args = listOption({115213},"castSuccess"),
 							},
 							paladin = {
 								type = 'group',
@@ -506,7 +506,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,114203,114207},"castSuccess"),	
+								args = listOption({97462,114203,114207,122294},"castSuccess"),	
 							},
 						},
 					},
