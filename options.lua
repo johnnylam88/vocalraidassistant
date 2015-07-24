@@ -4,7 +4,13 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 local AceConfig = LibStub("AceConfig-3.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("VocalRaidAssistant")
 local LSM = LibStub("LibSharedMedia-3.0")
-
+local rosterInfoArray = {}
+local rosterStatusArray = {}
+local rosterStatusOldArray = {}
+local rosterNameArray = {}
+local testnull = 0
+local first = true
+local raidMaxSize = 40
 
 function VRA:ShowConfig()
 	InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("VocalRaidAssistant", "Title"))
@@ -21,9 +27,190 @@ function VRA:ChangeProfile()
 end
 
 function VRA:AddOption(name, keyName)
+	
 	return AceConfigDialog:AddToBlizOptions("VocalRaidAssistant", name, "VocalRaidAssistant", keyName)
 end
 
+function VRA:UpdateRoster()
+	
+	rosterStatusOldArray[1] = vradb.raid1
+	rosterStatusOldArray[2] = vradb.raid2
+	rosterStatusOldArray[3] = vradb.raid3
+	rosterStatusOldArray[4] = vradb.raid4
+	rosterStatusOldArray[5] = vradb.raid5
+	rosterStatusOldArray[6] = vradb.raid6
+	rosterStatusOldArray[7] = vradb.raid7
+	rosterStatusOldArray[8] = vradb.raid8
+	rosterStatusOldArray[9] = vradb.raid9
+	rosterStatusOldArray[10] = vradb.raid10
+	rosterStatusOldArray[11] = vradb.raid11
+	rosterStatusOldArray[12] = vradb.raid12
+	rosterStatusOldArray[13] = vradb.raid13
+	rosterStatusOldArray[14] = vradb.raid14
+	rosterStatusOldArray[15] = vradb.raid15
+	rosterStatusOldArray[16] = vradb.raid16
+	rosterStatusOldArray[17] = vradb.raid17
+	rosterStatusOldArray[18] = vradb.raid18
+	rosterStatusOldArray[19] = vradb.raid19
+	rosterStatusOldArray[20] = vradb.raid20
+	rosterStatusOldArray[21] = vradb.raid21
+	rosterStatusOldArray[22] = vradb.raid22
+	rosterStatusOldArray[23] = vradb.raid23
+	rosterStatusOldArray[24] = vradb.raid24
+	rosterStatusOldArray[25] = vradb.raid25
+	rosterStatusOldArray[26] = vradb.raid26
+	rosterStatusOldArray[27] = vradb.raid27
+	rosterStatusOldArray[28] = vradb.raid28
+	rosterStatusOldArray[29] = vradb.raid29
+	rosterStatusOldArray[30] = vradb.raid30
+	rosterStatusOldArray[31] = vradb.raid31
+	rosterStatusOldArray[32] = vradb.raid32
+	rosterStatusOldArray[33] = vradb.raid33
+	rosterStatusOldArray[34] = vradb.raid34
+	rosterStatusOldArray[35] = vradb.raid35
+	rosterStatusOldArray[36] = vradb.raid36
+	rosterStatusOldArray[37] = vradb.raid37
+	rosterStatusOldArray[38] = vradb.raid38
+	rosterStatusOldArray[39] = vradb.raid39
+	rosterStatusOldArray[40] = vradb.raid40
+	
+	for i=1,raidMaxSize do
+		if GetRaidRosterInfo(i) ~= nil then
+			rosterNameArray[i] = GetRaidRosterInfo(i)
+		else
+			rosterNameArray[i] = ""
+		end
+		
+	end
+	
+	for i=1,raidMaxSize do
+		local found = false
+		for j=1,raidMaxSize do
+			if(rosterNameArray[i] == rosterInfoArray[j]) then
+			found = true
+				if(rosterStatusOldArray[j] ~= nil) then
+					rosterStatusArray[i] = rosterStatusOldArray[j]
+				end
+			end
+		end
+		if(not found and not first) then
+			rosterStatusArray[i] = false
+		end
+		if(first) then
+			rosterStatusArray[i] = rosterStatusOldArray[i]
+		end
+		
+	end
+	
+	first = false
+	
+	for i=1,raidMaxSize do
+		rosterInfoArray[i] = rosterNameArray[i]
+		--rosterStatusOldArray[i] = rosterStatusArray[i]
+	end
+	
+	vradb.raid1 = rosterStatusArray[1]
+	vradb.raid2 = rosterStatusArray[2]
+	vradb.raid3 = rosterStatusArray[3]
+	vradb.raid4 = rosterStatusArray[4]
+	vradb.raid5 = rosterStatusArray[5]
+	vradb.raid6 = rosterStatusArray[6]
+	vradb.raid7 = rosterStatusArray[7]
+	vradb.raid8 = rosterStatusArray[8]
+	vradb.raid9 = rosterStatusArray[9]
+	vradb.raid10 = rosterStatusArray[10]
+	vradb.raid11 = rosterStatusArray[11]
+	vradb.raid12 = rosterStatusArray[12]
+	vradb.raid13 = rosterStatusArray[13]
+	vradb.raid14 = rosterStatusArray[14]
+	vradb.raid15 = rosterStatusArray[15]
+	vradb.raid16 = rosterStatusArray[16]
+	vradb.raid17 = rosterStatusArray[17]
+	vradb.raid18 = rosterStatusArray[18]
+	vradb.raid19 = rosterStatusArray[19]
+	vradb.raid20 = rosterStatusArray[20]
+	vradb.raid21 = rosterStatusArray[21]
+	vradb.raid22 = rosterStatusArray[22]
+	vradb.raid23 = rosterStatusArray[23]
+	vradb.raid24 = rosterStatusArray[24]
+	vradb.raid25 = rosterStatusArray[25]
+	vradb.raid26 = rosterStatusArray[26]
+	vradb.raid27 = rosterStatusArray[27]
+	vradb.raid28 = rosterStatusArray[28]
+	vradb.raid29 = rosterStatusArray[29]
+	vradb.raid30 = rosterStatusArray[30]
+	vradb.raid31 = rosterStatusArray[31]
+	vradb.raid32 = rosterStatusArray[32]
+	vradb.raid33 = rosterStatusArray[33]
+	vradb.raid34 = rosterStatusArray[34]
+	vradb.raid35 = rosterStatusArray[35]
+	vradb.raid36 = rosterStatusArray[36]
+	vradb.raid37 = rosterStatusArray[37]
+	vradb.raid38 = rosterStatusArray[38]
+	vradb.raid39 = rosterStatusArray[39]
+	vradb.raid40 = rosterStatusArray[40]
+	
+	
+	if(testnull == 1) then
+	LibStub("AceConfigRegistry-3.0"):NotifyChange("VocalRaidAssistant")
+	else 
+	testnull = 1
+	end
+	
+end
+
+function VRA:IsSelected(name)
+	
+	rosterStatusOldArray[1] = vradb.raid1
+	rosterStatusOldArray[2] = vradb.raid2
+	rosterStatusOldArray[3] = vradb.raid3
+	rosterStatusOldArray[4] = vradb.raid4
+	rosterStatusOldArray[5] = vradb.raid5
+	rosterStatusOldArray[6] = vradb.raid6
+	rosterStatusOldArray[7] = vradb.raid7
+	rosterStatusOldArray[8] = vradb.raid8
+	rosterStatusOldArray[9] = vradb.raid9
+	rosterStatusOldArray[10] = vradb.raid10
+	rosterStatusOldArray[11] = vradb.raid11
+	rosterStatusOldArray[12] = vradb.raid12
+	rosterStatusOldArray[13] = vradb.raid13
+	rosterStatusOldArray[14] = vradb.raid14
+	rosterStatusOldArray[15] = vradb.raid15
+	rosterStatusOldArray[16] = vradb.raid16
+	rosterStatusOldArray[17] = vradb.raid17
+	rosterStatusOldArray[18] = vradb.raid18
+	rosterStatusOldArray[19] = vradb.raid19
+	rosterStatusOldArray[20] = vradb.raid20
+	rosterStatusOldArray[21] = vradb.raid21
+	rosterStatusOldArray[22] = vradb.raid22
+	rosterStatusOldArray[23] = vradb.raid23
+	rosterStatusOldArray[24] = vradb.raid24
+	rosterStatusOldArray[25] = vradb.raid25
+	rosterStatusOldArray[26] = vradb.raid26
+	rosterStatusOldArray[27] = vradb.raid27
+	rosterStatusOldArray[28] = vradb.raid28
+	rosterStatusOldArray[29] = vradb.raid29
+	rosterStatusOldArray[30] = vradb.raid30
+	rosterStatusOldArray[31] = vradb.raid31
+	rosterStatusOldArray[32] = vradb.raid32
+	rosterStatusOldArray[33] = vradb.raid33
+	rosterStatusOldArray[34] = vradb.raid34
+	rosterStatusOldArray[35] = vradb.raid35
+	rosterStatusOldArray[36] = vradb.raid36
+	rosterStatusOldArray[37] = vradb.raid37
+	rosterStatusOldArray[38] = vradb.raid38
+	rosterStatusOldArray[39] = vradb.raid39
+	rosterStatusOldArray[40] = vradb.raid40
+	
+	for i=1,raidMaxSize do
+		if(rosterNameArray[i]==name) then
+			if(rosterStatusOldArray[i]==true) then
+				return true
+			end
+		end
+	end
+	return false
+end
 
 
 local function setOption(info, value)
@@ -206,7 +393,7 @@ end
 function VRA:OnOptionCreate()
 
 	vradb = self.db1.profile
-	
+	self:UpdateRoster()
 	self.options = {
 		type = "group",
 		name = "Vocal Raid Assistant",
@@ -314,17 +501,25 @@ function VRA:OnOptionCreate()
 						inline = true,
 						order = -2,
 						args = {
+							buffAppliedSpecific = {
+								type = 'toggle',
+								name = "Individual Buff",
+								desc = "Check this will only alert for buff applied to specific players",
+								order = 1,
+							},
 							onlyRaidGroup = {
 								type = 'toggle',
 								name = "Only Check Raid Group",
 								desc = "Check this will only alert for buff/casts from/to raid group",
-								order = 1,
+								order = 2,
+								disabled = function() return vradb.buffAppliedSpecific end,
 							},
 							buffAppliedTank = {
 								type = 'toggle',
 								name = "Only Buffs On Tank",
 								desc = "Check this will only alert for buff applied to friendly tanks",
-								order = 2,
+								order = 3,
+								disabled = function() return vradb.buffAppliedSpecific end,
 							},
 							
 						},
@@ -462,14 +657,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC41F3BDeath Knight|r"],
 								order = 5,
-								args = listOption({51052},"castSuccess"),
+								args = listOption({51052,61999},"castSuccess"),
 							},
 							druid = {
 								type = 'group',
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({740,110707,106898,77764,77761},"castSuccess"),
+								args = listOption({740,110707,106898,77764,77761,20484},"castSuccess"),
 							},
 							hunter = {
 								type = 'group',
@@ -525,7 +720,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cff9482C9Warlock|r"],
 								order = 113,
-								args = listOption({},"castSuccess"),
+								args = listOption({20707},"castSuccess"),
 							},
 							warrior	= {
 								type = 'group',
@@ -553,7 +748,346 @@ function VRA:OnOptionCreate()
 					},
 				},
 			},
-			
+			IndividualAssingment = {
+				type = 'group',
+				name = "Individual Assingment",
+				desc = L["Abilities options"],
+				set = setOption,
+				get = getOption,
+				childGroups = "tab",
+				order = 3,
+				args = {
+					Individual = {
+						type = 'group',
+						name = "Target specific",
+						desc = "Buffs on Specialization",
+						inline = true,
+						order = -2,
+						args = {
+							raid1 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[1] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 1,
+								disabled = function() return (rosterInfoArray[1] == "") end,
+								hidden = function() return (rosterInfoArray[1] == "") end,
+							},
+							raid2 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[2] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 2,
+								disabled = function() return (rosterInfoArray[2] == "") end,
+								hidden = function() return (rosterInfoArray[2] == "") end,
+							},
+							raid3 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[3] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 3,
+								disabled = function() return (rosterInfoArray[3] == "") end,
+								hidden = function() return (rosterInfoArray[3] == "") end,
+							},
+							raid4 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[4] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 4,
+								disabled = function() return (rosterInfoArray[4] == "") end,
+								hidden = function() return (rosterInfoArray[4] == "") end,
+							},
+							raid5 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[5] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 5,
+								disabled = function() return (rosterInfoArray[5] == "") end,
+								hidden = function() return (rosterInfoArray[5] == "") end,
+							},
+							raid6 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[6] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 6,
+								disabled = function() return (rosterInfoArray[6] == "") end,
+								hidden = function() return (rosterInfoArray[6] == "") end,
+							},
+							raid7 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[7] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 7,
+								disabled = function() return (rosterInfoArray[7] == "") end,
+								hidden = function() return (rosterInfoArray[7] == "") end,
+							},
+							raid8 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[8] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 8,
+								disabled = function() return (rosterInfoArray[8] == "") end,
+								hidden = function() return (rosterInfoArray[8] == "") end,
+							},
+							raid9 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[9] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 9,
+								disabled = function() return (rosterInfoArray[9] == "") end,
+								hidden = function() return (rosterInfoArray[9] == "") end,
+							},
+							raid10 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[10] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 10,
+								disabled = function() return (rosterInfoArray[10] == "") end,
+								hidden = function() return (rosterInfoArray[10] == "") end,
+							},
+							raid11 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[11] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 11,
+								disabled = function() return (rosterInfoArray[11] == "") end,
+								hidden = function() return (rosterInfoArray[11] == "") end,
+							},
+							raid12 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[12] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 12,
+								disabled = function() return (rosterInfoArray[12] == "") end,
+								hidden = function() return (rosterInfoArray[12] == "") end,
+							},
+							raid13 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[13] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 13,
+								disabled = function() return (rosterInfoArray[13] == "") end,
+								hidden = function() return (rosterInfoArray[13] == "") end,
+							},
+							raid14 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[14] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 14,
+								disabled = function() return (rosterInfoArray[14] == "") end,
+								hidden = function() return (rosterInfoArray[14] == "") end,
+							},
+							raid15 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[15] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 15,
+								disabled = function() return (rosterInfoArray[15] == "") end,
+								hidden = function() return (rosterInfoArray[15] == "") end,
+							},
+							raid16 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[16] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 16,
+								disabled = function() return (rosterInfoArray[16] == "") end,
+								hidden = function() return (rosterInfoArray[16] == "") end,
+							},
+							raid17 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[17] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 17,
+								disabled = function() return (rosterInfoArray[17] == "") end,
+								hidden = function() return (rosterInfoArray[17] == "") end,
+							},
+							raid18 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[18] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 18,
+								disabled = function() return (rosterInfoArray[18] == "") end,
+								hidden = function() return (rosterInfoArray[18] == "") end,
+							},
+							raid19 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[19] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 19,
+								disabled = function() return (rosterInfoArray[19] == "") end,
+								hidden = function() return (rosterInfoArray[19] == "") end,
+							},
+							raid20 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[20] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 20,
+								disabled = function() return (rosterInfoArray[20] == "") end,
+								hidden = function() return (rosterInfoArray[20] == "") end,
+							},
+							raid21 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[21] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 21,
+								disabled = function() return (rosterInfoArray[21] == "") end,
+								hidden = function() return (rosterInfoArray[21] == "") end,
+							},
+							raid22 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[22] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 22,
+								disabled = function() return (rosterInfoArray[22] == "") end,
+								hidden = function() return (rosterInfoArray[22] == "") end,
+							},
+							raid23 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[23] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 23,
+								disabled = function() return (rosterInfoArray[23] == "") end,
+								hidden = function() return (rosterInfoArray[23] == "") end,
+							},
+							raid24 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[24] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 24,
+								disabled = function() return (rosterInfoArray[24] == "") end,
+								hidden = function() return (rosterInfoArray[24] == "") end,
+							},
+							raid25 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[25] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 25,
+								disabled = function() return (rosterInfoArray[25] == "") end,
+								hidden = function() return (rosterInfoArray[25] == "") end,
+							},
+							raid26 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[26] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 26,
+								disabled = function() return (rosterInfoArray[26] == "") end,
+								hidden = function() return (rosterInfoArray[26] == "") end,
+							},
+							raid27 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[27] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 27,
+								disabled = function() return (rosterInfoArray[27] == "") end,
+								hidden = function() return (rosterInfoArray[27] == "") end,
+							},
+							raid28 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[28] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 28,
+								disabled = function() return (rosterInfoArray[28] == "") end,
+								hidden = function() return (rosterInfoArray[28] == "") end,
+							},
+							raid29 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[29] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 29,
+								disabled = function() return (rosterInfoArray[29] == "") end,
+								hidden = function() return (rosterInfoArray[29] == "") end,
+							},
+							raid30 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[30] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 30,
+								disabled = function() return (rosterInfoArray[30] == "") end,
+								hidden = function() return (rosterInfoArray[30] == "") end,
+							},
+							raid31 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[31] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 31,
+								disabled = function() return (rosterInfoArray[31] == "") end,
+								hidden = function() return (rosterInfoArray[31] == "") end,
+							},
+							raid32 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[32] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 32,
+								disabled = function() return (rosterInfoArray[32] == "") end,
+								hidden = function() return (rosterInfoArray[32] == "") end,
+							},
+							raid33 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[33] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 33,
+								disabled = function() return (rosterInfoArray[33] == "") end,
+								hidden = function() return (rosterInfoArray[33] == "") end,
+							},
+							raid34 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[34] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 34,
+								disabled = function() return (rosterInfoArray[34] == "") end,
+								hidden = function() return (rosterInfoArray[34] == "") end,
+							},
+							raid35 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[35] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 35,
+								disabled = function() return (rosterInfoArray[35] == "") end,
+								hidden = function() return (rosterInfoArray[35] == "") end,
+							},
+							raid36 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[36] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 36,
+								disabled = function() return (rosterInfoArray[36] == "") end,
+								hidden = function() return (rosterInfoArray[36] == "") end,
+							},
+							raid37 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[37] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 37,
+								disabled = function() return (rosterInfoArray[37] == "") end,
+								hidden = function() return (rosterInfoArray[37] == "") end,
+							},
+							raid38 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[38] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 38,
+								disabled = function() return (rosterInfoArray[38] == "") end,
+								hidden = function() return (rosterInfoArray[38] == "") end,
+							},
+							raid39 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[39] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 39,
+								disabled = function() return (rosterInfoArray[39] == "") end,
+								hidden = function() return (rosterInfoArray[39] == "") end,
+							},
+							raid40 = {
+								type = 'toggle',
+								name = function() return rosterInfoArray[40] end,
+								desc = "Check this will alert for buff applied to this player",
+								order = 40,
+								disabled = function() return (rosterInfoArray[40] == "") end,
+								hidden = function() return (rosterInfoArray[40] == "") end,
+							},
+						},
+					},
+				},
+			},
 			custom = {
 				type = 'group',
 				name = L["Custom"],
@@ -605,7 +1139,7 @@ function VRA:OnOptionCreate()
 	self.options.args.profiles.order = -1
 	
 	self:AddOption(L["Abilities"], "spells")
-	
+	self:AddOption("Individual Assingment", "IndividualAssingment")
 	self:AddOption(L["Custom"], "custom")
 	self:AddOption(L["Profiles"], "profiles")
 end

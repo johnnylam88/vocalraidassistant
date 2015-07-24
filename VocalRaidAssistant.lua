@@ -61,8 +61,12 @@ local dbDefaults = {
 	profile = {
 		all = false,
 		raid = true,
+		
+		buffAppliedSpecific = false,
 		onlyRaidGroup = true,
 		buffAppliedTank = false,
+		
+		
 		field = true,
 		path = "VocalRaidAssistant\\Voice_enUS",
 		throttle = 0,
@@ -84,6 +88,9 @@ local dbDefaults = {
 		timewarp = false,
 		massdispel = false,
 		smassdispel = false,
+		soulstone = false,
+		rebirth = false,
+		raiseally = false,
 		
 		custom = {},
 	}	
@@ -161,37 +168,47 @@ function VocalRaidAssistant:OnInitialize()
 				desc = L["VERSION_DESC"],
 				args = {
 					version = {
-						order = 1,
+						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
 					},
-					header1 = {
-							order = 2,
+					header4 = {
+							order = -8,
+							type = "header",
+							name = "1.0.4",
+					},
+					desc4 = {
+						order	= -7,
+						type	= "description",
+						name	= L["1.0.4 Changelog"],
+					},
+					header3 = {
+							order = -6,
 							type = "header",
 							name = "1.0.3",
 					},
-					desc1 = {
-						order	= 3,
+					desc3 = {
+						order	= -5,
 						type	= "description",
 						name	= L["1.0.3 Changelog"],
 					},
 					header2 = {
-							order = 4,
+							order = -4,
 							type = "header",
 							name = "1.0.2",
 					},
 					desc2 = {
-						order	= 5,
+						order	= -3,
 						type	= "description",
 						name	= L["1.0.2 Changelog"],
 					},
-					header3 = {
-							order = 6,
+					header1 = {
+							order = -2,
 							type = "header",
 							name = "1.0.1",
 					},
-					desc3 = {
-						order	= 7,
+					desc1 = {
+						order	= -1,
 						type	= "description",
 						name	= L["1.0.1 Changelog"],
 					},
@@ -209,6 +226,7 @@ end
 function VocalRaidAssistant:OnEnable()
 	VocalRaidAssistant:RegisterEvent("PLAYER_ENTERING_WORLD")
 	VocalRaidAssistant:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	VocalRaidAssistant:RegisterEvent("GROUP_ROSTER_UPDATE","UpdateRoster")
 	--VocalRaidAssistant:RegisterEvent("UNIT_AURA")
 	if not VRA_LANGUAGE[vradb.path] then vradb.path = VRA_LOCALEPATH[GetLocale()] end
 	self.throttled = {}
@@ -345,8 +363,18 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	end
 	enddebug]]--
 	if (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_ME] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
-		if(vradb.onlyRaidGroup) then
-			if(UnitInRaid(destName) or UnitInParty(destName)) then
+		if(not vradb.buffAppliedSpecific) then
+			if(vradb.onlyRaidGroup) then
+				if(UnitInRaid(destName) or UnitInParty(destName)) then
+					if(vradb.buffAppliedTank) then
+						if(self:isTankSpec(destName)) then
+							self:PlaySpell("auraApplied", spellID)
+						end
+					else
+						self:PlaySpell("auraApplied", spellID)
+					end
+				end
+			else
 				if(vradb.buffAppliedTank) then
 					if(self:isTankSpec(destName)) then
 						self:PlaySpell("auraApplied", spellID)
@@ -356,8 +384,8 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				end
 			end
 		else
-			if(vradb.buffAppliedTank) then
-				if(self:isTankSpec(destName)) then
+			if(IsInRaid()) then
+				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
 				end
 			else
@@ -365,8 +393,18 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 			end
 		end
 	elseif (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
-		if(vradb.onlyRaidGroup) then
-			if(UnitInRaid(destName) or UnitInParty(destName)) then
+		if(not vradb.buffAppliedSpecific) then
+			if(vradb.onlyRaidGroup) then
+				if(UnitInRaid(destName) or UnitInParty(destName)) then
+					if(vradb.buffAppliedTank) then
+						if(self:isTankSpec(destName)) then
+							self:PlaySpell("auraApplied", spellID)
+						end
+					else
+						self:PlaySpell("auraApplied", spellID)
+					end
+				end
+			else
 				if(vradb.buffAppliedTank) then
 					if(self:isTankSpec(destName)) then
 						self:PlaySpell("auraApplied", spellID)
@@ -376,8 +414,8 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				end
 			end
 		else
-			if(vradb.buffAppliedTank) then
-				if(self:isTankSpec(destName)) then
+			if(IsInRaid()) then
+				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
 				end
 			else

@@ -46,6 +46,7 @@
 			[106898] = "stampedingRoar",
 			[77764] = "stampedingRoar", --cat
 			[77761] = "stampedingRoar", --bear
+			[20484] = "rebirth",
 			
 			--paladin	
 			[31821] = "auraMastery",
@@ -77,11 +78,11 @@
 			[80353] = "timewarp",
 			--dk
 			[51052] = "antiMagicZone",
-			
+			[61999] = "raiseally",
 			--hunter
 			[90355] = "ancienthysteria",
 			--warlock
-			
+			[20707] = "soulstone",
 			-- monk
 			[115213] = "avertHarm",
 			[115310] = "revival",
