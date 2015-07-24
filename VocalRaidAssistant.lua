@@ -238,6 +238,16 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
 					},
+					header15 = {
+							order = -30,
+							type = "header",
+							name = "1.2.2",
+					},
+					desc15 = {
+						order	= -29,
+						type	= "description",
+						name	= L["1.2.2 Changelog"],
+					},
 					header14 = {
 							order = -28,
 							type = "header",
@@ -518,7 +528,6 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 		killBoss = true
 	elseif (killBoss and not UnitAffectingCombat("player")) then
 		killBoss = false
-		VRA:bossWipe()
 	end
 	
 	if(spellID==123402) then

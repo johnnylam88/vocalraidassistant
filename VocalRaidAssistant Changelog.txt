@@ -1,3 +1,5 @@
+Version 1.2.2
+Small bugfix - stopped calling method that does not exist
 Version 1.2.1
 Small logical bugfix so player will not hear own cast on tanks
 Added abilities:
