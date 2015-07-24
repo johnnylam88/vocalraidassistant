@@ -1,0 +1,13 @@
+﻿## Interface: 50400
+## Title: Vocal Raid Assistant
+## Notes: Raid Cooldown Alerter
+## Author: Nitrak
+## SavedVariables: VocalRaidAssistantDB
+## Version: 1.0
+
+embeds.xml
+Locales\locales.xml
+
+VocalRaidAssistant.lua
+spelllist.lua
+options.lua
