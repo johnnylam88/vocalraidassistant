@@ -13,7 +13,7 @@
 			[1022] = "handOfProtection", 
 			[6940] = "sacrifice", 
 			[86659] = "guardianofancientkings",
-			[31850] = "argentdefender",
+			[31850] = "ardentdefender",
 			[498] = "divineprotection",
 			[642] = "divineshield",
 			--rogue
@@ -35,8 +35,10 @@
 			[48792] = "icebound",
 			[49028] = "dancingruneweapon",
 			[55233] = "vampiricblood",
+			[49016] = "unholyfrenzy",
 			--hunter
 			[34477] = "misdirection",
+			[53480] = "roarofsacrifice",
 			--lock
 			
 			--monk
@@ -59,7 +61,7 @@
 			[20484] = "rebirth",
 			
 			--paladin	
-			[31821] = "auraMastery",
+			[31821] = "devotionaura",
 			[633] = "layonHands",
 
 			--rogue
@@ -97,7 +99,7 @@
 			[20707] = "soulstone",
 			-- monk
 			[115213] = "avertHarm",
-			[115310] = "revival",
+			[115310] = "Revival",
 			
 		},
 		friendlyInterrupt = {			--friendly interrupt [spellid] = ".mp3 file name",

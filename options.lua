@@ -452,18 +452,48 @@ local function spellBCooldowns(spellName)
 		return 10
 	elseif(spellName == "Demoralizing Banner") then
 		return 15
+	else return -1 
+	end
+	
+end
+
+local function spellPBCooldowns(spellName)
+
+	if(spellName == "Iron Bark") then
+		return 12
+	elseif(spellName == "Life Cocoon") then
+		return 12
+	elseif(spellName == "Hand of Sacrifice") then
+		return 8
+	elseif(spellName == "Hand of Protection") then
+		return 8
+	elseif(spellName == "Pain Suppression") then
+		return 8
+	elseif(spellName == "Guardian Spirit") then
+		return 8
+	elseif(spellName == "Vigilance") then
+		return 8
+	elseif(spellName == "Life Cocoon") then
+		return 8
+	elseif(spellName == "Roar of Sacrifice") then
+		return 12
 	end
 	
 end
 
 
 
-function VRA:CreateBBar(player,spell)
+function VRA:CreateBBar(player,spell,...)
 	
 	if(not lockedB) then
 		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
-	
+		
 		local PROPOSAL_DURATION = spellBCooldowns(name)
+		
+		if(PROPOSAL_DURATION == -1 and ...=="personal") then
+			PROPOSAL_DURATION = spellPBCooldowns(name)
+		end
+		
 		local accept = true
 		for i,j in pairs(playerBSpell) do
 			if(i == player) then
@@ -690,18 +720,46 @@ local function spellOCooldowns(spellName)
 		return 40
 	elseif(spellName == "Shattering Throw") then
 		return 10
+	else return -1
 	end
 	
 end
 
 
+local function spellPOCooldowns(spellName)
 
-function VRA:CreateOBar(player,spell)
+	if(spellName == "Tricks of the Trade") then
+		return 12
+	elseif(spellName == "Unholy Frenzy") then
+		return 12
+	elseif(spellName == "Hand of Sacrifice") then
+		return 8
+	elseif(spellName == "Hand of Protection") then
+		return 8
+	elseif(spellName == "Pain Suppression") then
+		return 8
+	elseif(spellName == "Guardian Spirit") then
+		return 8
+	elseif(spellName == "Vigilance") then
+		return 8
+	elseif(spellName == "Life Cocoon") then
+		return 8
+	end
+	
+end
+
+
+function VRA:CreateOBar(player,spell,...)
 	
 	if(not lockedO) then
 		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spell)
 	
 		local PROPOSAL_DURATION = spellOCooldowns(name)
+		
+		if(PROPOSAL_DURATION == -1 and ...=="personal") then
+			PROPOSAL_DURATION = spellPOCooldowns(name)
+		end
+		
 		local accept = true
 		for i,j in pairs(playerOSpell) do
 			if(i == player) then
@@ -1710,7 +1768,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC41F3BDeath Knight|r"],
 								order = 5,
-								args = listOption({48792,49028,55233},"auraApplied"),
+								args = listOption({48792,49028,55233,49016},"auraApplied"),
 							},
 							druid = {
 								type = 'group',
@@ -1724,7 +1782,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffABD473Hunter|r"],
 								order = 7,
-								args = listOption({34477},"auraApplied"),
+								args = listOption({34477,53480},"auraApplied"),
 							},
 							mage = {
 								type = 'group',
@@ -1832,7 +1890,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({115213},"castSuccess"),
+								args = listOption({115213,115310},"castSuccess"),
 							},
 							paladin = {
 								type = 'group',
@@ -2141,12 +2199,14 @@ function VRA:OnOptionCreate()
 						 func = function() 
 								VRA:CreateBBar("Priest","64843")
 								VRA:CreateBBar("Druid","740")
+								VRA:CreateBBar("Monk","116849","personal")
+								VRA:CreateBBar("Hunter","53480","personal")
 								VRA:CreateBBar("Death Knight","51052")
 								VRA:CreateBBar("Paladin","31821")
 								VRA:CreateBBar("Rogue","76577")
 								VRA:CreateBBar("Warrior","97462")
 								VRA:CreateBBar("Shaman","98008")
-								VRA:CreateBBar("Monk","115213")
+								--VRA:CreateBBar("Monk","115213")
 						 end,
 						 handler = VocalRaidAssistant,
 					},
@@ -2295,6 +2355,8 @@ function VRA:OnOptionCreate()
 						func = function() 
 								VRA:CreateOBar("Mage","80353")
 								VRA:CreateOBar("Shaman","120668")
+								VRA:CreateOBar("Rogue","57934","personal")
+								VRA:CreateOBar("Death Knight","49016","personal")
 								VRA:CreateOBar("Warrior","114207")
 						end,
 						handler = VocalRaidAssistant,

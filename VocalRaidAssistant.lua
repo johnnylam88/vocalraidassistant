@@ -118,6 +118,7 @@ local dbDefaults = {
 		castSuccess = false,
 		interrupt = false,
 		
+		unholyfrenzy = false,
 		icebound = false,
 		dancingruneweapon = false,
 		vampiricblood = false,
@@ -311,6 +312,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header7 = {
+							order = -14,
+							type = "header",
+							name = "1.0.7",
+					},
+					desc7 = {
+						order	= -13,
+						type	= "description",
+						name	= L["1.0.7 Changelog"],
 					},
 					header6 = {
 							order = -12,
@@ -527,16 +538,16 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 			if(vradb.onlyRaidGroup) then
 				if(UnitInRaid(destName) or UnitInParty(destName)) then
 					if(vradb.buffAppliedTank) then
-						if(self:isTankSpec(destName)) then
+						if(GetSpecializationRole(GetSpecialization(destName)) == "TANK") then
 							self:PlaySpell("auraApplied", spellID)
 							if(vradb.enableBCooldownBar) then
-								VRA:CreateBBar(sourceName,spellID)
+								VRA:CreateBBar(sourceName,spellID,"personal")
 							end
 						end
 					else
-						self:PlaySpell("auraApplied", spellID)
+						self:PlaySpell("auraApplied", spellID,"personal")
 						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID)
+							VRA:CreateBBar(sourceName,spellID,"personal")
 						end
 					end
 				end
@@ -554,7 +565,7 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
 					if(vradb.enableBCooldownBar) then
-						VRA:CreateBBar(sourceName,spellID)
+						VRA:CreateBBar(sourceName,spellID,"personal")
 					end
 				end
 			else

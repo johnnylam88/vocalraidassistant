@@ -1,6 +1,15 @@
+Version 1.0.7
+Fixed bug where tanks would not hear buffs cast on self if "tanks only" was selected
+Added personal defensive buffs applications to show on defensive buff bar
+Added personal offensive buffs applications to show on offensive buff bar
+Recompiled several voice-files and fixed a few spelling errors.
+Added abilities:
+  - Unholy Frenzy
+  - Roar of Sacrifice
 Version 1.0.6
 Fixed "nil" bar error that would occur in rare situations
 Added class color to progress bars
+Added ability to see "pulsing" cooldown bars for low cooldown remaining
 Update bar interface slightly
 Added abilities:
   - Shattering Throw
