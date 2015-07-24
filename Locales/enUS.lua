@@ -1,6 +1,26 @@
 ﻿local L = LibStub("AceLocale-3.0"):NewLocale("VocalRaidAssistant", "enUS",true)
 if not L then return end
 
+L["Main Options"] = "Main Options"
+L["MAIN_OPTIONS_DESC"] = "Main Options test"
+L["GET_VERSION"] = GetAddOnMetadata("VocalRaidAssistant", "Version")
+L["Vocal Raid Assistant"] = "Vocal Raid Assistant"
+L["VOCAL_RAID_ASSISTANCE_DESC"] = ""
+L["Version"] = "Version/Changelog"
+L["VERSION_DESC"] = ""
+L["1.0.2 Changelog"] = "Improved menu utility" .. "\n" .. "Removed Load Configuration and now load on default" .. "\n" .. "Added abilities:" .. "\n" .. "  - Tricks of the Trade (Off by default)" .. "\n" .. "  - Misdirection (Off by default)" .. "\n" .. "Fixed multiple appliances of buff (Bloodlust, Heroism, Time Warp, Ancient Hysteria)"
+L["1.0.1 Changelog"] = "Fixed raid was not toggled as default" .. "\n" .. "Added abilities:" .. "\n" .. "  - Innervate" .. "\n" .. "Fixed multiple appliances of buff (Like Stampede and Avert Harm)"
+L["GENERAL_HEADER"] = "General"
+L["GENERAL_DESCRIPTION"] = "Enabled area: Determines where you want Vocal Raid Assistant to be active" .. "\n\n" .. "Voice Config: Set up voice and volume (Currently only one voice available)" .. "\n\n" .. "Advance options: Enable thotteling of sounds to not be overwhelmed (Try without throtteling first)"
+L["ABILITIES_HEADER"] = "Abilities"
+L["ABILITIES_DESCRIPTION"] = "Disable options: Disable segments of vocal options with one click" .. "\n\n" .. "Buff Applied: Single buffs applied to a friendly unit" .. "\n\n" .. "Special Abilities: Multi target or raid abilities to several friendly units" .. "\n\n" .. "Friendly Interrupt: Announce successful friendly interrupts"
+L["CUSTOM_ABILITIES_HEADER"] = "Custom Abilities"
+L["CUSTOM_ABILITIES_DESCRIPTION"] = "Enable you to track a custom ability of your own choice. Fill in the fields as asked, and it should work!" .. "\n\n" .. "Use existing sound currently does not work, but will in a later version. You will have to provide the sound file yourself"
+
+
+
+
+
 L["Spell cast success"] = true
 L["Spell cast start"] = true
 L["Spell aura applied"] = true
@@ -43,8 +63,10 @@ L["Dest unit"] = true
 L["Dest type"] = true
 
 L["PVP Voice Alert"] = true
+L["PVE Voice Alert"] = true
 L["Load Configuration"] = true
 L["Load Configuration Options"] = true
+L["Load Configuration Options - Red + will appear"] = true
 L["General"] = true
 L["General options"] = true
 L["Enable area"] = true

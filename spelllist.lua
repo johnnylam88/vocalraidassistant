@@ -10,7 +10,7 @@
 			[6940] = "sacrifice", 
 			
 			--rogue
-			
+			[57934] = "tricksofthetrade",
 			--warrior
 			[114030] = "vigilance",
 
@@ -19,14 +19,13 @@
 			[47788] = "guardianSpirit",
 			
 			--shaman
-			[2825] = "bloodLust",
-			[32182] = "heroism",
+			
 			--mage
-			[80353] = "timewarp",
+			
 			--dk
 			
 			--hunter
-			[90355] = "ancienthysteria",
+			[34477] = "misdirection",
 			--lock
 			
 			--monk
@@ -70,13 +69,15 @@
 			[98008] = "spiritlinktotem",
 			[108280] = "healingTide",
 			[120668] = "stormlash",
+			[2825] = "bloodLust",
+			[32182] = "heroism",
 			--mage
-			
+			[80353] = "timewarp",
 			--dk
 			[51052] = "antiMagicZone",
 			
 			--hunter
-			
+			[90355] = "ancienthysteria",
 			--warlock
 			
 			-- monk

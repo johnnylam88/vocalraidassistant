@@ -1,3 +1,10 @@
+Version 1.0.2
+Improved menu utility
+Removed Load Configuration and now load on default
+Added abilities:
+  - Tricks of the Trade
+  - Misdirection
+Fixed multiple appliances of buff (Bloodlust, Heroism, Time Warp, Ancient Hysteria)
 Version 1.0.1
 Fixed raid was not toggled as default
 Added abilities:

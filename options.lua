@@ -8,6 +8,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 function VRA:ShowConfig()
 	InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("VocalRaidAssistant", "Title"))
+	InterfaceOptionsFrame_OpenToCategory(GetAddOnMetadata("VocalRaidAssistant", "Title"))
 end
 
 function VRA:ChangeProfile()
@@ -205,7 +206,7 @@ function VRA:OnOptionCreate()
 	
 	self.options = {
 		type = "group",
-		name = GetAddOnMetadata("VocalRaidAssistant", "Title"),
+		name = "Vocal Raid Assistant",
 		args = {
 			general = {
 				type = 'group',
@@ -356,14 +357,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffABD473Hunter|r"],
 								order = 7,
-								args = listOption({90355},"auraApplied"),
+								args = listOption({34477},"auraApplied"),
 							},
 							mage = {
 								type = 'group',
 								inline = true,
 								name = L["|cff69CCF0Mage|r"],
 								order = 8,
-								args = listOption({80353},"auraApplied"),
+								args = listOption({},"auraApplied"),
 							},
 							monk = {
 								type = 'group',
@@ -391,14 +392,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFFF569Rogue|r"],
 								order = 12,
-								args = listOption({},"auraApplied"),
+								args = listOption({57934},"auraApplied"),
 							},
 							shaman	= {
 								type = 'group',
 								inline = true,
 								name = L["|cff0070daShaman|r"],
 								order = 13,
-								args = listOption({2825,32182},"auraApplied"),
+								args = listOption({},"auraApplied"),
 							},
 							warlock	= {
 								type = 'group',
@@ -450,14 +451,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffABD473Hunter|r"],
 								order = 7,
-								args = listOption({},"castSuccess"),
+								args = listOption({90355},"castSuccess"),
 							},
 							mage = {
 								type = 'group',
 								inline = true,
 								name = L["|cff69CCF0Mage|r"],
 								order = 8,
-								args = listOption({},"castSuccess"),
+								args = listOption({80353},"castSuccess"),
 							},
 							monk = {
 								type = 'group',
@@ -492,7 +493,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cff0070daShaman|r"],
 								order = 112,
-								args = listOption({108280,98008,16190,120668},"castSuccess"),
+								args = listOption({2825,32182,108280,98008,16190,120668},"castSuccess"),
 							},
 							warlock = {
 								type = 'group',

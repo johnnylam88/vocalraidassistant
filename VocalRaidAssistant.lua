@@ -6,8 +6,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale("VocalRaidAssistant")
 local LSM = LibStub("LibSharedMedia-3.0")
 local self, VRA = VocalRaidAssistant, VocalRaidAssistant
 local VRA_TEXT = "VocalRaidAssistant"
-local VRA_VERSION = " v1.0.1"
+local VRA_VERSION = " " .. GetAddOnMetadata("VocalRaidAssistant", "Version")
 local VRA_AUTHOR = " updated by Nitrak"
+
 
 local VRA_LOCALEPATH = {
 	enUS = "VocalRaidAssistant\\Voice_enUS",
@@ -71,7 +72,8 @@ local dbDefaults = {
 		castSuccess = false,
 		interrupt = false,
 		
-
+		misdirection = false,
+		tricksofthetrade = false,
 		bloodlust = false,
 		heroism = false,
 		ancienthysteria = false,
@@ -104,34 +106,96 @@ function VocalRaidAssistant:OnInitialize()
 	self.db1.RegisterCallback(self, "OnProfileCopied", "ChangeProfile")
 	self.db1.RegisterCallback(self, "OnProfileReset", "ChangeProfile")
 	vradb = self.db1.profile
+	
 	local options = {
 		name = "Vocal Raid Assistant",
-		desc = L["PVP Voice Alert"],
+		desc = L["PVE Voice Alert"],
 		type = 'group',
-		args = {},
+		args = {
+			general = {
+				order = 1,
+				type = "group",
+				name = L["Vocal Raid Assistant"],
+				desc = L["VOCAL_RAID_ASSISTANCE_DESC"],
+				args = {
+					general = {
+						order = 1,
+						type = "header",
+						name = L["GENERAL_HEADER"],
+					},
+					desc1 = {
+						order = 2,
+						type = "description",
+						name = L["GENERAL_DESCRIPTION"],
+					},
+					abilities = {
+						order = 3,
+						type = "header",
+						name = L["ABILITIES_HEADER"],
+					},
+					desc2 = {
+						order = 4,
+						type = "description",
+						name = L["ABILITIES_DESCRIPTION"],
+					},
+					custom = {
+						order = 5,
+						type = "header",
+						name = L["CUSTOM_ABILITIES_HEADER"],
+					},
+					desc3 = {
+						order = 6,
+						type = "description",
+						name = L["CUSTOM_ABILITIES_DESCRIPTION"],
+					},
+				},	
+			},
+			general2 = {
+				order = 2,
+				type = "group",
+				name = L["Version"],
+				desc = L["VERSION_DESC"],
+				args = {
+					version = {
+						order = 1,
+						type = "description",
+						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header1 = {
+							order = 2,
+							type = "header",
+							name = "1.0.2",
+					},
+					desc1 = {
+						order	= 3,
+						type	= "description",
+						name	= L["1.0.2 Changelog"],
+					},
+					header2 = {
+							order = 4,
+							type = "header",
+							name = "1.0.1",
+					},
+					desc2 = {
+						order	= 5,
+						type	= "description",
+						name	= L["1.0.1 Changelog"],
+					},
+				},	
+			},			
+		},
 	}
 	local bliz_options = CopyTable(options)
-	bliz_options.args.load = {
-		name = L["Load Configuration"],
-		desc = L["Load Configuration Options"],
-		type = 'execute',
-		func = function() 
-			self:OnOptionCreate() 
-			bliz_options.args.load.disabled = true 
-			GameTooltip:Hide() 
-			--fix for in 5.3 BLZOptionsFrame can't refresh on load
-			InterfaceOptionsFrame:Hide() 
-			InterfaceOptionsFrame:Show() 
-		end,
-		handler = VocalRaidAssistant,
-	}
+	
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("VocalRaidAssistant_bliz", bliz_options)
 	AceConfigDialog:AddToBlizOptions("VocalRaidAssistant_bliz", "VocalRaidAssistant")
+	self:OnOptionCreate() 
+	
 end
 function VocalRaidAssistant:OnEnable()
 	VocalRaidAssistant:RegisterEvent("PLAYER_ENTERING_WORLD")
 	VocalRaidAssistant:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	VocalRaidAssistant:RegisterEvent("UNIT_AURA")
+	--VocalRaidAssistant:RegisterEvent("UNIT_AURA")
 	if not VRA_LANGUAGE[vradb.path] then vradb.path = VRA_LOCALEPATH[GetLocale()] end
 	self.throttled = {}
 	self.smarter = 0
