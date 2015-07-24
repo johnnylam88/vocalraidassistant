@@ -11,6 +11,7 @@ local rosterStatusOldArray = {}
 local rosterNameArray = {}
 local rosterClassArray = {}
 local testnull = 0
+local testingactive = false
 local first = true
 local raidMaxSize = 40
 local activeBarsArray = {}
@@ -29,6 +30,69 @@ local activeBMove = 0
 local playerBSpell = {}
 local lockedB = false
 
+
+function VRA:class(name)
+	local nameL,classL
+
+	for i=1,raidMaxSize do
+		if GetRaidRosterInfo(i) ~= nil then
+			nameL, _, _, _, classL, _, _, _, _, _, _ = GetRaidRosterInfo(i) 
+			if name == nameL then
+				return classL
+			end
+		end
+	end
+end
+
+function VRA:classColor(class)
+	if(class=="Death Knight") then return "|cffC41F3B"
+	elseif(class=="Druid") then return "|cffFF7D0A"
+	elseif(class=="Hunter") then return "|cffABD473"
+	elseif(class=="Mage") then return "|cff69CCF0"
+	elseif(class=="Monk") then return "|cFF558A84"
+	elseif(class=="Paladin") then return "|cffF58CBA"
+	elseif(class=="Priest") then return "|cffFFFFFF"
+	elseif(class=="Rogue") then return "|cffFFF569"
+	elseif(class=="Shaman") then return "|cff0070da"
+	elseif(class=="Warlock") then return "|cff9482C9"
+	elseif(class=="Warrior") then return "|cffC79C6E"
+	else return "" end
+end
+
+local function RGBClass(name)
+	local class = VRA:class(name)
+	
+	if(class=="Death Knight") then return "0.77,0.12,0.23"
+	elseif(class=="Druid") then return "1.00,0.49,0.04"
+	elseif(class=="Hunter") then return "0.67,0.83,0.45"
+	elseif(class=="Mage") then return "0.41,0.80,0.94"
+	elseif(class=="Monk") then return "0.33,0.54,0.52"
+	elseif(class=="Paladin") then return "0.96,0.55,0.73"
+	elseif(class=="Priest") then return "1.00,1.00,1.00"
+	elseif(class=="Rogue") then return "1.00,0.96,0.41"
+	elseif(class=="Shaman") then return "0.00,0.44,0.87"
+	elseif(class=="Warlock") then return "0.58,0.51,0.79"
+	elseif(class=="Warrior") then return "0.78,0.61,0.43"
+	else return "" end
+
+end
+
+local function RGBClassTEST(class)
+		
+	if(class=="Death Knight") then return "0.77,0.12,0.23"
+	elseif(class=="Druid") then return "1.00,0.49,0.04"
+	elseif(class=="Hunter") then return "0.67,0.83,0.45"
+	elseif(class=="Mage") then return "0.41,0.80,0.94"
+	elseif(class=="Monk") then return "0.33,0.54,0.52"
+	elseif(class=="Paladin") then return "0.96,0.55,0.73"
+	elseif(class=="Priest") then return "1.00,1.00,1.00"
+	elseif(class=="Rogue") then return "1.00,0.96,0.41"
+	elseif(class=="Shaman") then return "0.00,0.44,0.87"
+	elseif(class=="Warlock") then return "0.58,0.51,0.79"
+	elseif(class=="Warrior") then return "0.78,0.61,0.43"
+	else return "" end
+
+end
 
 
 function VRA:getBarX()
@@ -69,6 +133,14 @@ end
 
 function VRA:getFontType()
 	return vradb.fontType
+end
+
+function VRA:getPulseStart()
+	return vradb.pulseStart
+end
+
+function VRA:getPulseIntensity()
+	return vradb.pulseIntensity
 end
 
 function VRA:getBarTexture()
@@ -350,7 +422,7 @@ end
 
 local function spellBCooldowns(spellName)
 	
-	if(spellName == "Anti Magic Zone") then
+	if(spellName == "Anti-Magic Zone") then
 		return 3
 	elseif(spellName == "Tranquility") then
 		return 8
@@ -396,7 +468,9 @@ function VRA:CreateBBar(player,spell)
 		for i,j in pairs(playerBSpell) do
 			if(i == player) then
 				if(playerBSpell[i]==name) then
-					accept = false
+					if(not testingactive) then
+						accept = false
+					end
 				end
 			end
 		end
@@ -421,38 +495,40 @@ function VRA:CreateBBar(player,spell)
 			else
 				activeBBarsArray[activeBBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBBarX(),-activeBBars*VRA:getBBarHeight()+VRA:getBBarY())
 			end
-			activeBBarsArray[activeBBars]:SetStatusBarColor(0,1,0)
+			
+			local classColor
+			classColor = RGBClassTEST(player)
+			
+			if(classColor == "") then
+				classColor = RGBClass(player)
+			end
+			activeBBarsArray[activeBBars]:SetStatusBarColor(strsub(classColor,1,4),strsub(classColor,6,9),strsub(classColor,11,14))
 		
+			
 			activeBBarsArray[activeBBars].bg = activeBBarsArray[activeBBars]:CreateTexture(nil, "BACKGROUND")
 			activeBBarsArray[activeBBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
 			activeBBarsArray[activeBBars].bg:SetAllPoints(true)
 			activeBBarsArray[activeBBars].bg:SetVertexColor(0, 0, 0)
 	
 		
-			local once = false
-			local once2 = false
+			if(player ~= nil) then
+				playerBSpell[player] = name
+			end
+
+			local dashPos = strfind(player,"-")
+			if(dashPos~=nil) then
+				player = strsub(player,1,dashPos-1)
+			end
+				
 			local t = PROPOSAL_DURATION
 			local HALF_POINT = PROPOSAL_DURATION / 2
 			activeBBarsArray[activeBBars]:SetScript("OnUpdate", function(bar, elapsed)
 				t = t - elapsed
 				bar:SetValue(t)
-				if t > HALF_POINT then
-					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
-				else
-					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
-				end
 				bar:SetWidth(VRA:getBBarWidth())
 				bar:SetHeight(VRA:getBBarHeight())
 				text:SetFont(VRA:SetFont(VRA:getBFontType()), VRA:getBFontSize(), "OUTLINE")
-				local playerTemp = player
-				if(not once) then
-					playerBSpell[player] = name
-					once = true
-				end
-				local dashPos = strfind(player,"-")
-				if(dashPos~=nil) then
-					player = strsub(player,1,dashPos)
-				end
+				
 				text:SetText(player.." - "..name.."("..convertTime(t)..")")
 				activeBBarsArray[activeBBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBBarTexture()))
 				
@@ -480,10 +556,8 @@ function VRA:CreateBBar(player,spell)
 					for i=1,activeBBars do
 						activeBBarsArray[i] = activeBBarsArray[i+1]
 					end
-					if(not once2) then
-						playerBSpell[playerTemp] = ""
-						once2 = true
-					end
+					
+					playerBSpell[player] = ""
 					text:SetText("")
 					VRA:modifyBBars()
 					bar:Hide()
@@ -632,7 +706,9 @@ function VRA:CreateOBar(player,spell)
 		for i,j in pairs(playerOSpell) do
 			if(i == player) then
 				if(playerOSpell[i]==name) then
-					accept = false
+					if(not testingactive) then
+						accept = false
+					end
 				end
 			end
 		end
@@ -657,7 +733,14 @@ function VRA:CreateOBar(player,spell)
 			else
 				activeOBarsArray[activeOBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getOBarX(),-activeOBars*VRA:getOBarHeight()+VRA:getOBarY())
 			end
-			activeOBarsArray[activeOBars]:SetStatusBarColor(0,1,0)
+			
+			local classColor
+			classColor = RGBClassTEST(player)
+			
+			if(classColor == "") then
+				classColor = RGBClass(player)
+			end
+			activeOBarsArray[activeOBars]:SetStatusBarColor(strsub(classColor,1,4),strsub(classColor,6,9),strsub(classColor,11,14))
 		
 			activeOBarsArray[activeOBars].bg = activeOBarsArray[activeOBars]:CreateTexture(nil, "BACKGROUND")
 			activeOBarsArray[activeOBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
@@ -665,30 +748,24 @@ function VRA:CreateOBar(player,spell)
 			activeOBarsArray[activeOBars].bg:SetVertexColor(0, 0, 0)
 	
 		
-			local once = false
-			local once2 = false
+			if(player ~= nil) then
+				playerOSpell[player] = name
+			end
+
+			local dashPos = strfind(player,"-")
+			if(dashPos~=nil) then
+				player = strsub(player,1,dashPos-1)
+			end
 			local t = PROPOSAL_DURATION
 			local HALF_POINT = PROPOSAL_DURATION / 2
+			local k = (5-1)/10
 			activeOBarsArray[activeOBars]:SetScript("OnUpdate", function(bar, elapsed)
 				t = t - elapsed
 				bar:SetValue(t)
-				if t > HALF_POINT then
-					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
-				else
-					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
-				end
 				bar:SetWidth(VRA:getOBarWidth())
 				bar:SetHeight(VRA:getOBarHeight())
 				text:SetFont(VRA:SetFont(VRA:getOFontType()), VRA:getOFontSize(), "OUTLINE")
-				local playerTemp = player
-				if(not once) then
-					playerOSpell[player] = name
-					once = true
-				end
-				local dashPos = strfind(player,"-")
-				if(dashPos~=nil) then
-					player = strsub(player,1,dashPos)
-				end
+				
 				text:SetText(player.." - "..name.."("..convertTime(t)..")")
 				activeOBarsArray[activeOBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getOBarTexture()))
 				
@@ -716,10 +793,7 @@ function VRA:CreateOBar(player,spell)
 					for i=1,activeOBars do
 						activeOBarsArray[i] = activeOBarsArray[i+1]
 					end
-					if(not once2) then
-						playerOSpell[playerTemp] = ""
-						once2 = true
-					end
+					playerOSpell[player] = ""
 					text:SetText("")
 					VRA:modifyOBars()
 					bar:Hide()
@@ -819,12 +893,12 @@ function VRA:MoveBar(name,duration)
 		
 		
 		
+		local TWO_THIRD = 2*duration /3
 		local t = duration
-		local HALF_POINT = duration / 2
 		activeBarsArray[activeBars]:SetScript("OnUpdate", function(bar, elapsed)
 			t = t - elapsed
 			bar:SetValue(t)
-			if t > HALF_POINT then
+			if t > TWO_THIRD then
 				bar:SetStatusBarColor(1, t / duration, 0)
 			else
 				bar:SetStatusBarColor(1 - (t / duration), 1, 0)
@@ -854,7 +928,7 @@ end
 
 local function spellCooldowns(spellName)
 	
-	if(spellName == "Anti Magic Zone") then
+	if(spellName == "Anti-Magic Zone") then
 		return 2*60
 	elseif(spellName == "Tranquility") then
 		return 8*60
@@ -900,7 +974,9 @@ function VRA:CreateBar(player,spell)
 		for i,j in pairs(playerSpell) do
 			if(i == player) then
 				if(playerSpell[i]==name) then
-					accept = false
+					if(not testingactive) then
+						accept = false
+					end
 				end
 			end
 		end
@@ -925,7 +1001,13 @@ function VRA:CreateBar(player,spell)
 			else
 				activeBarsArray[activeBars]:SetPoint("BOTTOMLEFT",UIParent,"BOTTOMLEFT",0+VRA:getBarX(),-activeBars*VRA:getBarHeight()+VRA:getBarY())
 			end
-			activeBarsArray[activeBars]:SetStatusBarColor(0,1,0)
+			local classColor
+			classColor = RGBClassTEST(player)
+			
+			if(classColor == "") then
+				classColor = RGBClass(player)
+			end
+			activeBarsArray[activeBars]:SetStatusBarColor(strsub(classColor,1,4),strsub(classColor,6,9),strsub(classColor,11,14))
 		
 			activeBarsArray[activeBars].bg = activeBarsArray[activeBars]:CreateTexture(nil, "BACKGROUND")
 			activeBarsArray[activeBars].bg:SetTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
@@ -933,30 +1015,22 @@ function VRA:CreateBar(player,spell)
 			activeBarsArray[activeBars].bg:SetVertexColor(0, 0, 0)
 	
 		
-			local once = false
-			local once2 = false
+			if(player ~= nil) then
+				playerSpell[player] = name
+			end
+
+			local dashPos = strfind(player,"-")
+			if(dashPos~=nil) then
+				player = strsub(player,1,dashPos-1)
+			end
 			local t = PROPOSAL_DURATION
 			local HALF_POINT = PROPOSAL_DURATION / 2
 			activeBarsArray[activeBars]:SetScript("OnUpdate", function(bar, elapsed)
 				t = t - elapsed
 				bar:SetValue(t)
-				if t > HALF_POINT then
-					bar:SetStatusBarColor(1, t / PROPOSAL_DURATION, 0)
-				else
-					bar:SetStatusBarColor(1 - (t / PROPOSAL_DURATION), 1, 0)
-				end
 				bar:SetWidth(VRA:getBarWidth())
 				bar:SetHeight(VRA:getBarHeight())
 				text:SetFont(VRA:SetFont(VRA:getFontType()), VRA:getFontSize(), "OUTLINE")
-				local playerTemp = player
-				if(not once) then
-					playerSpell[player] = name
-					once = true
-				end
-				local dashPos = strfind(player,"-")
-				if(dashPos~=nil) then
-					player = strsub(player,1,dashPos)
-				end
 				text:SetText(player.." - "..name.."("..convertTime(t)..")")
 				activeBarsArray[activeBars]:SetStatusBarTexture(VRA:SetTexture(VRA:getBarTexture()))
 				
@@ -979,15 +1053,20 @@ function VRA:CreateBar(player,spell)
 						end
 					end
 				end
+				if(vradb.enablePulse) then
+					if t < vradb.pulseStart then
+						bar:SetAlpha(math.abs(sin(90+7*math.pow((vradb.pulseStart-t),vradb.pulseIntensity))))
+					end
+				else
+					bar:SetAlpha(1)
+				end
 				if t < 0.001 then
 					activeBars = activeBars-1
 					for i=1,activeBars do
 						activeBarsArray[i] = activeBarsArray[i+1]
 					end
-					if(not once2) then
-						playerSpell[playerTemp] = ""
-						once2 = true
-					end
+
+					playerSpell[player] = ""
 					text:SetText("")
 					VRA:modifyBars()
 					bar:Hide()
@@ -996,6 +1075,59 @@ function VRA:CreateBar(player,spell)
 			end)
 		end
 	end
+end
+
+
+
+function VRA:ClearBars()
+	--Clearing cooldowns
+	for i,j in pairs(playerSpell) do
+		playerSpell[i]=""
+	end
+	
+	for i=1,activeBars do
+		activeBarsArray[i]:Hide()
+	end
+	
+	activeBars = 0
+	
+	locked = false
+	activeMove = 0
+
+end
+
+function VRA:ClearBBars()
+	--Clearing cooldowns
+	for i,j in pairs(playerBSpell) do
+		playerBSpell[i]=""
+	end
+	
+	for i=1,activeBBars do
+		activeBBarsArray[i]:Hide()
+	end
+	
+	activeBBars = 0
+	
+	lockedB = false
+	activeBMove = 0
+
+end
+
+function VRA:ClearOBars()
+	--Clearing cooldowns
+	for i,j in pairs(playerOSpell) do
+		playerOSpell[i]=""
+	end
+	
+	for i=1,activeOBars do
+		activeOBarsArray[i]:Hide()
+	end
+	
+	activeOBars = 0
+	
+	lockedO = false
+	activeOMove = 0
+
 end
 
 
@@ -1036,20 +1168,6 @@ function VRA:AddOption(name, keyName)
 	return AceConfigDialog:AddToBlizOptions("VocalRaidAssistant", name, "VocalRaidAssistant", keyName)
 end
 
-function VRA:class(name)
-	if(name=="Death Knight") then return "|cffC41F3B"
-	elseif(name=="Druid") then return "|cffFF7D0A"
-	elseif(name=="Hunter") then return "|cffABD473"
-	elseif(name=="Mage") then return "|cff69CCF0"
-	elseif(name=="Monk") then return "|cFF558A84"
-	elseif(name=="Paladin") then return "|cffF58CBA"
-	elseif(name=="Priest") then return "|cffFFFFFF"
-	elseif(name=="Rogue") then return "|cffFFF569"
-	elseif(name=="Shaman") then return "|cff0070da"
-	elseif(name=="Warlock") then return "|cff9482C9"
-	elseif(name=="Warrior") then return "|cffC79C6E"
-	else return "" end
-end
 
 function VRA:UpdateRoster()
 	
@@ -1132,7 +1250,7 @@ function VRA:UpdateRoster()
 	first = false
 	
 	for i=1,raidMaxSize do
-		rosterInfoArray[i] = VRA:class(rosterClassArray[i]) .. rosterNameArray[i]
+		rosterInfoArray[i] = VRA:classColor(rosterClassArray[i]) .. rosterNameArray[i]
 		--rosterStatusOldArray[i] = rosterStatusArray[i]
 	end
 	
@@ -1756,7 +1874,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,114203,114207,122294,1160},"castSuccess"),	
+								args = listOption({97462,114203,114207,122294,1160,64382},"castSuccess"),	
 							},
 						},
 					},
@@ -1822,27 +1940,58 @@ function VRA:OnOptionCreate()
 						name = "Move me!",
 						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
 						type = 'execute',
+						order = 2,
+						disabled = function() if(vradb.enableCooldownBar) then return false else VRA:ClearBars() return true end end,
 						func = function() 
 							VRA:MoveBar("COOLDOWN BAR!",20)
-							--VRA:CreateBar("Nitrak","97462")
+							--VRA:CreateBar("Damista","97462")
+							--VRA:CreateBar("Nítrak","97462")
+							--VRA:CreateBar("Zørg-TheMaelstrom","97462")
 						end,
 						handler = VocalRaidAssistant,
 					},
-					--forcetest = {
-					--	name = "TEST!",
-					--	desc = "TEST!",
-					--	type = 'execute',
-					--	func = function() 
-					--			VRA:CreateBar("Coza","97462")
-					--	end,
-					--	handler = VocalRaidAssistant,
-					--},
+					userTest = {
+						name = "Test!",
+						desc = "Test some bars!",
+						type = 'execute',
+						order = 3,
+						disabled = function() if(vradb.enableCooldownBar) then return false else return true end end,
+						func = function() 
+								VRA:CreateBar("Priest","64843")
+								VRA:CreateBar("Druid","740")
+								VRA:CreateBar("Death Knight","51052")
+								VRA:CreateBar("Paladin","31821")
+								VRA:CreateBar("Monk","115213")
+								VRA:CreateBar("Warrior","97462")
+								VRA:CreateBar("Shaman","108280")
+						end,
+						handler = VocalRaidAssistant,
+					},
+					forcetest = {
+						name = "TEST!",
+						desc = "TEST!",
+						type = 'execute',
+						order = 4,
+						disabled = function() if(vradb.enableCooldownBar) then return false else return true end end,
+						hidden = not testingactive,
+						func = function() 
+								VRA:CreateBar("Priest","64843")
+								VRA:CreateBar("Druid","740")
+								VRA:CreateBar("Death Knight","51052")
+								VRA:CreateBar("Paladin","31821")
+								VRA:CreateBar("Monk","115213")
+								VRA:CreateBar("Warrior","97462")
+								VRA:CreateBar("Warrior","108280")
+						end,
+						handler = VocalRaidAssistant,
+					},
 					BarSettings = {
 						type = 'group',
 						name = "Bar Settings",
 						desc = "Bar Settings",
 						inline = true,
 						order = -2,
+						disabled = function() if(vradb.enableCooldownBar) then return false else return true end end,
 						args = {
 							barWidth = {
 								type = 'range',
@@ -1898,6 +2047,34 @@ function VRA:OnOptionCreate()
 								desc = "Active = UP \nDisabled = DOWN",
 								order=6,
 							},
+							enablePulse = {
+								type = 'toggle',
+								name = "Enable Pulse",
+								desc = "Bar starts pulsing once timer is met",
+								order=7,
+							},
+							pulseStart = {
+								type = 'range',
+								max = 25,
+								min = 1,
+								step = 1,
+								disabled = function() if(vradb.enableCooldownBar and vradb.enablePulse) then return false else return true end end,
+								name = "Pulse Start",
+								desc = "Adjust remaining time pulse",
+								get = "getPulseStart",
+								order = 8,
+							},
+							pulseIntensity = {
+								type = 'range',
+								max = 3,
+								min = 1,
+								step = 0.1,
+								disabled = function() if(vradb.enableCooldownBar and vradb.enablePulse) then return false else return true end end,
+								name = "Pulse Intensity",
+								desc = "Adjust pulse intensity",
+								get = "getPulseIntensity",
+								order = 8,
+							},
 						},
 					},
 				},
@@ -1947,26 +2124,57 @@ function VRA:OnOptionCreate()
 						name = "Move me!",
 						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
 						type = 'execute',
+						order = 2,
+						disabled = function() if(vradb.enableBCooldownBar) then return false else VRA:ClearBBars() return true end end,
 						func = function() 
 							VRA:MoveBBar("DEFENSIVE BUFF BAR!",20)
-							--VRA:CreateBar("Nitrak","97462")
+							--VRA:CreateBBar("Testperson-Terenas","97462")
 						end,
 						handler = VocalRaidAssistant,
 					},
-					--forceBtest = {
-					--	name = "TEST!",
-					--	desc = "TEST!",
-					--	type = 'execute',
-					--	func = function() 
-					--			VRA:CreateBBar("Coza","97462")
-					--	end,
-					--	handler = VocalRaidAssistant,
-					--},
+					userBTest = {
+						 name = "Test!",
+						 desc = "Test some bars!",
+						 type = 'execute',
+						 order = 3,
+						 disabled = function() if(vradb.enableBCooldownBar) then return false else return true end end,
+						 func = function() 
+								VRA:CreateBBar("Priest","64843")
+								VRA:CreateBBar("Druid","740")
+								VRA:CreateBBar("Death Knight","51052")
+								VRA:CreateBBar("Paladin","31821")
+								VRA:CreateBBar("Rogue","76577")
+								VRA:CreateBBar("Warrior","97462")
+								VRA:CreateBBar("Shaman","98008")
+								VRA:CreateBBar("Monk","115213")
+						 end,
+						 handler = VocalRaidAssistant,
+					},
+					forceBtest = {
+						 name = "TEST!",
+						 desc = "TEST!",
+						 type = 'execute',
+						 order = 4,
+						 disabled = function() if(vradb.enableBCooldownBar) then return false else return true end end,
+						 hidden = not testingactive,
+						 func = function() 
+								VRA:CreateBBar("Priest","64843")
+								VRA:CreateBBar("Druid","740")
+								VRA:CreateBBar("Death Knight","51052")
+								VRA:CreateBBar("Paladin","31821")
+								VRA:CreateBBar("Rogue","76577")
+								VRA:CreateBBar("Warrior","97462")
+								VRA:CreateBBar("Shaman","98008")
+								VRA:CreateBBar("Monk","115213")
+						 end,
+						 handler = VocalRaidAssistant,
+					},
 					bBarSettings = {
 						type = 'group',
 						name = "Bar Settings",
 						desc = "Bar Settings",
 						inline = true,
+						disabled = function() if(vradb.enableBCooldownBar) then return false else return true end end,
 						order = -2,
 						args = {
 							bbarWidth = {
@@ -2072,26 +2280,44 @@ function VRA:OnOptionCreate()
 						name = "Move me!",
 						desc = "Click to move the position of the bar(s) - Clears all active cooldowns!",
 						type = 'execute',
+						disabled = function() if(vradb.enableOCooldownBar) then return false else VRA:ClearOBars() return true end end,
 						func = function() 
 							VRA:MoveOBar("OFFENSIVE BUFF BAR!",20)
 							--VRA:CreateBar("Nitrak","97462")
 						end,
 						handler = VocalRaidAssistant,
 					},
-					--forceOtest = {
-					--	name = "TEST!",
-					--	desc = "TEST!",
-					--	type = 'execute',
-					--	func = function() 
-					--			VRA:CreateOBar("Coza","114207")
-					--	end,
-					--	handler = VocalRaidAssistant,
-					--},
+					userOTest = {
+						name = "Test!",
+						desc = "Test some bars!",
+						type = 'execute',
+						disabled = function() if(vradb.enableOCooldownBar) then return false else return true end end,
+						func = function() 
+								VRA:CreateOBar("Mage","80353")
+								VRA:CreateOBar("Shaman","120668")
+								VRA:CreateOBar("Warrior","114207")
+						end,
+						handler = VocalRaidAssistant,
+					},
+					forceOtest = {
+						name = "TEST!",
+						desc = "TEST!",
+						type = 'execute',
+						disabled = function() if(vradb.enableOCooldownBar) then return false else return true end end,
+						hidden = not testingactive,
+						func = function() 
+								VRA:CreateOBar("Mage","80353")
+								VRA:CreateOBar("Shaman","120668")
+								VRA:CreateOBar("Warrior","114207")
+						end,
+						handler = VocalRaidAssistant,
+					},
 					oBarSettings = {
 						type = 'group',
 						name = "Bar Settings",
 						desc = "Bar Settings",
 						inline = true,
+						disabled = function() if(vradb.enableOCooldownBar) then return false else return true end end,
 						order = -2,
 						args = {
 							obarWidth = {

@@ -71,6 +71,7 @@
 			[114203] = "demoralizingBanner",
 			[122294] = "sstampedingshout",
 			[1160] = "demoralizingshout",
+			[64382] = "shatteringthrow",
 			--priest
 			[64843] = "divineHymn",
 			[64901] = "hymnOfHope",

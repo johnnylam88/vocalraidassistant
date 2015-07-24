@@ -81,6 +81,9 @@ local dbDefaults = {
 		fontSize = 11,
 		fontType = "Friz Quadrata TT",
 		barTexture = "Blizzard",
+		enablePulse = false,
+		pulseStart = 10,
+		getPulseIntensity = 2,
 		
 		enableCooldownBar = false,
 		growthDirection = true,
@@ -128,6 +131,7 @@ local dbDefaults = {
 		shieldwall = false,
 		laststand = false,
 		demoralizingshout = false,
+		shatteringthrow = false,
 		
 		innervate = false,
 		misdirection = false,
@@ -307,6 +311,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header6 = {
+							order = -12,
+							type = "header",
+							name = "1.0.6",
+					},
+					desc6 = {
+						order	= -11,
+						type	= "description",
+						name	= L["1.0.6 Changelog"],
 					},
 					header5 = {
 							order = -10,

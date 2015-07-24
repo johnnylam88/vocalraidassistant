@@ -1,6 +1,14 @@
+Version 1.0.6
+Fixed "nil" bar error that would occur in rare situations
+Added class color to progress bars
+Update bar interface slightly
+Added abilities:
+  - Shattering Throw
 Version 1.0.5
-Added Defensive Cooldown Tracker
-Added Offensive Cooldown Tracker
+Added Cooldown Bar
+Added Defensive Buff Bar
+Added Offensive Buff Bar
+(NOTE: All the bar's will receive further updates)
 Added class color to Individual Buff
 Added abilities:
   - Icebound Fortitude
