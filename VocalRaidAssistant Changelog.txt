@@ -1,3 +1,11 @@
+Version 1.2
+Removed all bar features, and reverted back to the core of the addon.
+There are other addons that handle cooldown timers and bars, this addon will only handle vocal announcement from now on.
+Added abilities:
+ - Nature's Vigil
+ - Gorefiend's Grasp
+ - Ancestral Guidance
+This addon should no longer conflict with WA or other addons 
 Version 1.1.2
 Fixed a color missing bug in bars
 Applied to self only now works with personal cast abilities as well! (Like Shield Wall)

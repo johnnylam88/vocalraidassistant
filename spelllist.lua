@@ -1,228 +1,4 @@
-﻿function VocalRaidAssistant:GetBarData() 
-	return {
-	
-		[51052] = {
-			desc = "",
-			type = "premade",
-			class = "DEATH KNIGHT",
-			cd = 2*60,
-		},
-		[740] = {
-			desc = "",
-			type = "premade",
-			class = "DRUID",
-			cd = 8*60,
-		},
-		[115310] = {
-			desc = "",
-			type = "premade",
-			class = "MONK",
-			cd = 3*60,
-		},
-		[31821] = {
-			desc = "",
-			type = "premade",
-			class = "PALADIN",
-			cd = 3*60,
-		},
-		[64843] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			cd = 3*60,
-		},
-		[62618] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			cd = 3*60,
-		},
-		[15286] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			cd = 3*60,
-		},
-		[76577] = {
-			desc = "",
-			type = "premade",
-			class = "ROGUE",
-			cd = 3*60,
-		},
-		[108280] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			cd = 3*60,
-		},
-		[98008] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			cd = 3*60,
-		},
-		[97462] = {
-			desc = "",
-			type = "premade",
-			class = "WARRIOR",
-			cd = 3*60,
-		},
-		[159916] = {
-			desc = "",
-			type = "premade",
-			class = "MAGE",
-			cd = 2*60,
-		},
-	}
-end
-
-function VocalRaidAssistant:GetBarDataO() 
-	return {
-	
-		[90355] = {
-			desc = "",
-			type = "premade",
-			class = "HUNTER",
-			duration = 40,
-		},
-		[80353] = {
-			desc = "",
-			type = "premade",
-			class = "MAGE",
-			duration = 40,
-		},
-		[2825] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 40,
-		},
-		[32182] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 40,
-		},
-		[64382] = {
-			desc = "",
-			type = "premade",
-			class = "WARRIOR",
-			duration = 10,
-		},
-		[172106] = {
-			desc = "",
-			type = "premade",
-			class = "HUNTER",
-			duration = 6,
-		},
-	}
-end	
-
-function VocalRaidAssistant:GetBarDataB() 
-	return {
-	
-		[51052] = {
-			desc = "",
-			type = "premade",
-			class = "DEATH KNIGHT",
-			duration = 3,
-		},
-		[740] = {
-			desc = "",
-			type = "premade",
-			class = "DRUID",
-			duration = 8,
-		},
-		[102342] = {
-			desc = "",
-			type = "premade self",
-			class = "DRUID",
-			duration = 12,
-		},
-		[116849] = {
-			desc = "",
-			type = "premade self",
-			class = "MONK",
-			duration = 12,
-		},
-		[31821] = {
-			desc = "",
-			type = "premade",
-			class = "PALADIN",
-			duration = 6,
-		},
-		[6940] = {
-			desc = "",
-			type = "premade self",
-			class = "PALADIN",
-			duration = 12,
-		},
-		[64843] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			duration = 8,
-		},
-		[62618] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			duration = 10,
-		},
-		[15286] = {
-			desc = "",
-			type = "premade",
-			class = "PRIEST",
-			duration = 15,
-		},
-		[33206] = {
-			desc = "",
-			type = "premade self",
-			class = "PRIEST",
-			duration = 8,
-		},
-		[76577] = {
-			desc = "",
-			type = "premade",
-			class = "ROGUE",
-			duration = 5,
-		},
-		[108280] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 10,
-		},
-		[98008] = {
-			desc = "",
-			type = "premade",
-			class = "SHAMAN",
-			duration = 6,
-		},
-		[97462] = {
-			desc = "",
-			type = "premade",
-			class = "WARRIOR",
-			duration = 10,
-		},
-		[114030] = {
-			desc = "",
-			type = "premade self",
-			class = "WARRIOR",
-			duration = 12,
-		},
-		[159916] = {
-			desc = "",
-			type = "premade",
-			class = "MAGE",
-			duration = 6,
-		},
-	}
-end	
-		
-
-
-function VocalRaidAssistant:GetSpellList ()
+﻿function VocalRaidAssistant:GetSpellList ()
 	return {
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
@@ -252,7 +28,7 @@ function VocalRaidAssistant:GetSpellList ()
 			[47788] = "guardianSpirit",
 			
 			--shaman
-			[165344] = "ascendance",
+			[114052] = "ascendance",
 			--mage
 			
 			--dk
@@ -283,6 +59,7 @@ function VocalRaidAssistant:GetSpellList ()
 			[77764] = "stampedingRoar", --cat
 			[77761] = "stampedingRoar", --bear
 			[20484] = "rebirth",
+			[124974] = "naturesvigil",
 
 			
 			--paladin	
@@ -306,6 +83,7 @@ function VocalRaidAssistant:GetSpellList ()
 			[108280] = "healingTide",
 			[2825] = "bloodLust",
 			[32182] = "heroism",
+			[108281] = "ancestralguidance",
 			
 			--mage
 			[80353] = "timewarp",
@@ -313,6 +91,7 @@ function VocalRaidAssistant:GetSpellList ()
 			--dk
 			[51052] = "antiMagicZone",
 			[61999] = "raiseally",
+			[108199] = "gorefiendsgrasp",
 			--hunter
 			[90355] = "ancienthysteria",
 			[172106] = "aspectofthefox",

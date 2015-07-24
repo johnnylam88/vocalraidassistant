@@ -80,44 +80,6 @@ local dbDefaults = {
 		spellsB = {},
 		dataLock = true,
 		
-		barX = GetScreenWidth()/3-200,
-		barY = GetScreenHeight(),
-		heightX = 20,
-		barWidth = 200,
-		barHeight = 20,
-		fontSize = 11,
-		fontType = "Friz Quadrata TT",
-		barTexture = "Blizzard",
-		enablePulse = false,
-		pulseStart = 10,
-		getPulseIntensity = 2,
-		
-		enableCooldownBar = false,
-		growthDirection = true,
-		
-		obarX = GetScreenWidth()/3+200,
-		obarY = GetScreenHeight(),
-		oheightX = 20,
-		obarWidth = 200,
-		obarHeight = 20,
-		ofontSize = 11,
-		ofontType = "Friz Quadrata TT",
-		obarTexture = "Blizzard",
-		
-		oenableCooldownBar = false,
-		ogrowthDirection = true,
-		
-		bbarX = GetScreenWidth()/3,
-		bbarY = GetScreenHeight(),
-		bheightX = 20,
-		bbarWidth = 200,
-		bbarHeight = 20,
-		bfontSize = 11,
-		bfontType = "Friz Quadrata TT",
-		bbarTexture = "Blizzard",
-		
-		benableCooldownBar = false,
-		bgrowthDirection = true,
 		
 		aruaApplied = false,
 		aruaRemoved = false,
@@ -147,16 +109,19 @@ local dbDefaults = {
 		ascendance = false,
 		misdirection = false,
 		tricksofthetrade = false,
-		bloodlust = false,
-		heroism = false,
-		ancienthysteria = false,
-		timewarp = false,
+		bloodlust = true,
+		heroism = true,
+		ancienthysteria = true,
+		timewarp = true,
 		massdispel = false,
 		soulstone = false,
 		rebirth = false,
 		raiseally = false,
 		runetap = false,
 		antimagicshell = false,
+		ancestralguidance = false,
+		gorefiendsgrasp = false,
+		naturesvigil = false,
 		
 		custom = {},
 	}	
@@ -185,34 +150,7 @@ function VocalRaidAssistant:OnInitialize()
 	vradb = self.db1.profile
 	
 	
-	-- Register some SharedMedia goodies.
-		LSM:Register("font", "Adventure",				[[Interface\Addons\VocalRaidAssistant\fonts\Adventure.ttf]])
-		LSM:Register("font", "ABF",					[[Interface\Addons\VocalRaidAssistant\fonts\ABF.ttf]])
-		LSM:Register("font", "Vera Serif",			[[Interface\Addons\VocalRaidAssistant\fonts\VeraSe.ttf]])
-		LSM:Register("font", "Diablo",				[[Interface\Addons\VocalRaidAssistant\fonts\Avqest.ttf]])
-		LSM:Register("font", "Accidental Presidency",	[[Interface\Addons\VocalRaidAssistant\fonts\Accidental Presidency.ttf]])
-		LSM:Register("statusbar", "Aluminium",		[[Interface\Addons\VocalRaidAssistant\statusbar\Aluminium]])
-		LSM:Register("statusbar", "Armory",			[[Interface\Addons\VocalRaidAssistant\statusbar\Armory]])
-		LSM:Register("statusbar", "BantoBar",			[[Interface\Addons\VocalRaidAssistant\statusbar\BantoBar]])
-		LSM:Register("statusbar", "Glaze",			[[Interface\Addons\VocalRaidAssistant\statusbar\Glaze]])
-		LSM:Register("statusbar", "Glaze2",			[[Interface\Addons\VocalRaidAssistant\statusbar\Glaze2]])
-		LSM:Register("statusbar", "Gloss",			[[Interface\Addons\VocalRaidAssistant\statusbar\Gloss]])
-		LSM:Register("statusbar", "Graphite",			[[Interface\Addons\VocalRaidAssistant\statusbar\Graphite]])
-		LSM:Register("statusbar", "Grid",				[[Interface\Addons\VocalRaidAssistant\statusbar\Grid]])
-		LSM:Register("statusbar", "Healbot",			[[Interface\Addons\VocalRaidAssistant\statusbar\Healbot]])
-		LSM:Register("statusbar", "LiteStep",			[[Interface\Addons\VocalRaidAssistant\statusbar\LiteStep]])
-		LSM:Register("statusbar", "Minimalist",		[[Interface\Addons\VocalRaidAssistant\statusbar\Minimalist]])
-		LSM:Register("statusbar", "Otravi",			[[Interface\Addons\VocalRaidAssistant\statusbar\Otravi]])
-		LSM:Register("statusbar", "Outline",			[[Interface\Addons\VocalRaidAssistant\statusbar\Outline]])
-		LSM:Register("statusbar", "Perl",				[[Interface\Addons\VocalRaidAssistant\statusbar\Perl]])
-		LSM:Register("statusbar", "Smooth",			[[Interface\Addons\VocalRaidAssistant\statusbar\Smooth]])
-		LSM:Register("statusbar", "Round",			[[Interface\Addons\VocalRaidAssistant\statusbar\Round]])
-		LSM:Register("statusbar", "TukTex",			[[Interface\Addons\VocalRaidAssistant\statusbar\normTex]])
-		LSM:Register("statusbar", "Frost",			[[Interface\Addons\VocalRaidAssistant\statusbar\Frost]])
-		LSM:Register("statusbar", "Xeon",			[[Interface\Addons\VocalRaidAssistant\statusbar\Xeon]])
-		LSM:Register("statusbar", "Runes",			[[Interface\Addons\VocalRaidAssistant\statusbar\Runes]])
-		LSM:Register("statusbar", "Rocks",			[[Interface\Addons\VocalRaidAssistant\statusbar\Rocks]])
-		
+
 		-- Some sounds (copied from Omen).
 		LSM:Register("sound", "Rubber Ducky", [[Sound\Doodad\Goblin_Lottery_Open01.wav]])
 		LSM:Register("sound", "Cartoon FX", [[Sound\Doodad\Goblin_Lottery_Open03.wav]])
@@ -271,43 +209,13 @@ function VocalRaidAssistant:OnInitialize()
 						type = "description",
 						name = L["ASSINGMENT_DESCRIPTION"],
 					},
-					cooldown = {
-						order = 7,
-						type = "header",
-						name = L["COOLDOWN_HEADER"],
-					},
-					desc4 = {
-						order = 8,
-						type = "description",
-						name = L["COOLDOWN_DESCRIPTION"],
-					},
-					defbuff = {
-						order = 9,
-						type = "header",
-						name = L["DEF_BUFF_HEADER"],
-					},
-					desc5 = {
-						order = 10,
-						type = "description",
-						name = L["DEF_BUFF_DESCRIPTION"],
-					},
-					offbuff = {
-						order = 11,
-						type = "header",
-						name = L["OFF_BUFF_HEADER"],
-					},
-					desc6 = {
-						order = 12,
-						type = "description",
-						name = L["OFF_BUFF_DESCRIPTION"],
-					},
 					custom = {
-						order = 13,
+						order = 7,
 						type = "header",
 						name = L["CUSTOM_ABILITIES_HEADER"],
 					},
 					desc7 = {
-						order = 14,
+						order = 8,
 						type = "description",
 						name = L["CUSTOM_ABILITIES_DESCRIPTION"],
 					},
@@ -323,6 +231,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header13 = {
+							order = -26,
+							type = "header",
+							name = "1.2",
+					},
+					desc13 = {
+						order	= -25,
+						type	= "description",
+						name	= L["1.2 Changelog"],
 					},
 					header12 = {
 							order = -24,
@@ -464,7 +382,6 @@ function VocalRaidAssistant:OnEnable()
 	if not VRA_LANGUAGE[vradb.path] then vradb.path = VRA_LOCALEPATH[GetLocale()] end
 	self.throttled = {}
 	self.smarter = 0
-	self:InitDB()
 end
 
 function VocalRaidAssistant:OnDisable()
@@ -527,24 +444,7 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	end
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName= select ( 1 , ... );
 	if not VRA_EVENT[event] then return end
-	--print(playerName,sourceName,destName,destFlags,event,spellName,spellID)
-	--print(GetInspectSpecialization(destName))
-	--if GetInspectSpecialization(destName)==tankSpecs[2] then
-	--	print("test")
-	--end
-	
-	--if(test==0) then
-	--	for i=1, GetNumGroupMembers() do
-	--		name = GetRaidRosterInfo(i)
-	--		print(name)
-	--	end
-	--	test=1
-	--end
-	
-	--if(self:isTankSpec(destName)) then
-	--	print("TANK!!!!!")
-	--end
-	
+
 	if (destFlags) then
 		for k in pairs(VRA_TYPE) do
 			desttype[k] = CombatLog_Object_IsA(destFlags,k)
@@ -608,32 +508,18 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	
 	if (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_ME] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
 		if(not vradb.buffAppliedSpecific) then
-			--if(vradb.onlyRaidGroup) then
-			--	if(UnitInRaid(destName) or UnitInParty(destName)) then
 					if(vradb.buffAppliedTank) then
 						if(self:isTankSpec(destName)) then
 							self:PlaySpell("auraApplied", spellID)
-							if(vradb.enableBCooldownBar) then
-								VRA:CreateBBar(sourceName,spellID,"personal")
-								VRA:CreateBBar(sourceName,spellName,"personal")
-							end
 						end
 					else
 						self:PlaySpell("auraApplied", spellID)
-						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID,"personal")
-							VRA:CreateBBar(sourceName,spellName,"personal")
-						end
 					end
 			
 		else
 			if(IsInRaid() or IsInGroup()) then
 				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
-					if(vradb.enableBCooldownBar) then
-						VRA:CreateBBar(sourceName,spellID,"personal")
-						VRA:CreateBBar(sourceName,spellName,"personal")
-					end
 				end
 			else
 				self:PlaySpell("auraApplied", spellID)
@@ -646,42 +532,24 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 					if(vradb.buffAppliedTank) then
 						if(self:isTankSpec(destName)) then
 							self:PlaySpell("auraApplied", spellID)
-							if(vradb.enableBCooldownBar) then
-								if(spellID ~= 97462) then
-									VRA:CreateBBar(sourceName,spellID)
-									VRA:CreateBBar(sourceName,spellName)
-								end
-							end
 						end
 					else
 						self:PlaySpell("auraApplied", spellID)
-						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID)
-							VRA:CreateBBar(sourceName,spellName)
-						end
 					end
 				end
 			else
 				if(vradb.buffAppliedTank) then
 					if(self:isTankSpec(destName)) then
 						self:PlaySpell("auraApplied", spellID)
-						VRA:CreateBBar(sourceName,spellID)
-						VRA:CreateBBar(sourceName,spellName)
 					end
 				else
 					self:PlaySpell("auraApplied", spellID)
-					VRA:CreateBBar(sourceName,spellID)
-					VRA:CreateBBar(sourceName,spellName)
 				end
 			end
 		else
 			if(IsInRaid() or IsInGroup()) then
 				if(self:IsSelected(destName)) then
 					self:PlaySpell("auraApplied", spellID)
-					if(vradb.enableBCooldownBar) then
-						VRA:CreateBBar(sourceName,spellID)
-						VRA:CreateBBar(sourceName,spellName)
-					end
 				end
 			else
 				self:PlaySpell("auraApplied", spellID)
@@ -715,44 +583,16 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
 					if(self:isTankSpec(sourceName)) then
 						self:PlaySpell("castSuccess", spellID)
-						if(vradb.enableCooldownBar) then
-							VRA:CreateBar(sourceName,spellID)
-							VRA:CreateBar(sourceName,spellName)
-						end
-						if(vradb.enableOCooldownBar) then
-							VRA:CreateOBar(sourceName,spellID)
-							VRA:CreateOBar(sourceName,spellName)
-						end
-						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID)
-							VRA:CreateBBar(sourceName,spellName)
-						end
 					end
 				end
 			elseif(vradb.onlyRaidGroup and not vradb.buffAppliedSpecific) then
 				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
 					self:PlaySpell("castSuccess", spellID)
-					if(vradb.enableCooldownBar) then
-						VRA:CreateBar(sourceName,spellID)
-						VRA:CreateBar(sourceName,spellName)
-					end
-					if(vradb.enableOCooldownBar) then
-						VRA:CreateOBar(sourceName,spellID)
-						VRA:CreateOBar(sourceName,spellName)
-					end
-					if(vradb.enableBCooldownBar) then
-						VRA:CreateBBar(sourceName,spellID)
-						VRA:CreateBBar(sourceName,spellName)
-					end
 				end
 			elseif(vradb.buffAppliedSpecific) then
 				if(IsInRaid() or IsInGroup()) then
 					if(self:IsSelected(sourceName)) then
 						self:PlaySpell("auraApplied", spellID)
-						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID)
-							VRA:CreateBBar(sourceName,spellName)							
-						end
 					end	
 				end
 			else
@@ -762,20 +602,6 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	elseif ((event == "SPELL_CAST_SUCCESS" or event == "SPELL_SUMMON") and sourcetype[COMBATLOG_FILTER_ME] and (not vradb.sonlyTF or sourceuid.target or sourceuid.focus) and not vradb.castSuccess) then
 		
 				--print(sourceName.. " " ..spellID)
-					if(sourceName==(UnitName("player"))) then	
-						if(vradb.enableCooldownBar) then
-							VRA:CreateBar(sourceName,spellID)
-							VRA:CreateBar(sourceName,spellName)
-						end
-						if(vradb.enableOCooldownBar) then
-							VRA:CreateOBar(sourceName,spellID,"personal")
-							VRA:CreateOBar(sourceName,spellName,"personal")
-						end
-						if(vradb.enableBCooldownBar) then
-							VRA:CreateBBar(sourceName,spellID,"personal")
-							VRA:CreateBBar(sourceName,spellName,"personal")
-						end
-					end
 			
 			
 	elseif (event == "SPELL_INTERRUPT" and (desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] or desttype[COMBATLOG_FILTER_HOSTILE_UNITS]) and not vradb.interrupt) then 
