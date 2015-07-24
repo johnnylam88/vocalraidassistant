@@ -24,6 +24,8 @@ function VRA:AddOption(name, keyName)
 	return AceConfigDialog:AddToBlizOptions("VocalRaidAssistant", name, "VocalRaidAssistant", keyName)
 end
 
+
+
 local function setOption(info, value)
 	local name = info[#info]
 	vradb[name] = value
@@ -36,7 +38,7 @@ local function getOption(info)
 	return vradb[name]
 end
 local function spellOption(order, spellID, ...)
-	local spellname, _, icon = GetSpellInfo(spellID)				
+	local spellname, _, icon = GetSpellInfo(spellID)	
 	if (spellname ~= nil) then
 		return {
 			type = 'toggle',
@@ -199,9 +201,10 @@ function VRA:MakeCustomOption(key)
 		}
 	}
 end
-	
+
 
 function VRA:OnOptionCreate()
+
 	vradb = self.db1.profile
 	
 	self.options = {
@@ -304,6 +307,28 @@ function VRA:OnOptionCreate()
 				childGroups = "tab",
 				order = 2,
 				args = {
+					spellSpec = {
+						type = 'group',
+						name = "Target specific",
+						desc = "Buffs on Specialization",
+						inline = true,
+						order = -2,
+						args = {
+							onlyRaidGroup = {
+								type = 'toggle',
+								name = "Only Check Raid Group",
+								desc = "Check this will only alert for buff/casts from/to raid group",
+								order = 1,
+							},
+							buffAppliedTank = {
+								type = 'toggle',
+								name = "Only Buffs On Tank",
+								desc = "Check this will only alert for buff applied to friendly tanks",
+								order = 2,
+							},
+							
+						},
+					},
 					spellGeneral = {
 						type = 'group',
 						name = L["Disable options"],
@@ -350,7 +375,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({29166},"auraApplied"),	
+								args = listOption({29166,102342},"auraApplied"),	
 							},
 							hunter = {
 								type = 'group',
@@ -479,7 +504,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFFFFFFPriest|r"],
 								order = 110,
-								args = listOption({64843,64901,62618,32375,113277},"castSuccess"),
+								args = listOption({64843,64901,62618,32375,113277,15286},"castSuccess"),
 							},
 							rogue = {
 								type = 'group',
@@ -528,6 +553,7 @@ function VRA:OnOptionCreate()
 					},
 				},
 			},
+			
 			custom = {
 				type = 'group',
 				name = L["Custom"],
@@ -579,6 +605,7 @@ function VRA:OnOptionCreate()
 	self.options.args.profiles.order = -1
 	
 	self:AddOption(L["Abilities"], "spells")
+	
 	self:AddOption(L["Custom"], "custom")
 	self:AddOption(L["Profiles"], "profiles")
 end

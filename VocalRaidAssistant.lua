@@ -8,7 +8,8 @@ local self, VRA = VocalRaidAssistant, VocalRaidAssistant
 local VRA_TEXT = "VocalRaidAssistant"
 local VRA_VERSION = " " .. GetAddOnMetadata("VocalRaidAssistant", "Version")
 local VRA_AUTHOR = " updated by Nitrak"
-
+local tankSpecs = {250,104,268,66,73} --Blood DK, Guardian, Brewmaster, Prot Pala, Prot Warr
+--local test = 0
 
 local VRA_LOCALEPATH = {
 	enUS = "VocalRaidAssistant\\Voice_enUS",
@@ -60,6 +61,8 @@ local dbDefaults = {
 	profile = {
 		all = false,
 		raid = true,
+		onlyRaidGroup = true,
+		buffAppliedTank = false,
 		field = true,
 		path = "VocalRaidAssistant\\Voice_enUS",
 		throttle = 0,
@@ -72,6 +75,7 @@ local dbDefaults = {
 		castSuccess = false,
 		interrupt = false,
 		
+		innervate = false,
 		misdirection = false,
 		tricksofthetrade = false,
 		bloodlust = false,
@@ -164,20 +168,30 @@ function VocalRaidAssistant:OnInitialize()
 					header1 = {
 							order = 2,
 							type = "header",
-							name = "1.0.2",
+							name = "1.0.3",
 					},
 					desc1 = {
 						order	= 3,
 						type	= "description",
-						name	= L["1.0.2 Changelog"],
+						name	= L["1.0.3 Changelog"],
 					},
 					header2 = {
 							order = 4,
 							type = "header",
-							name = "1.0.1",
+							name = "1.0.2",
 					},
 					desc2 = {
 						order	= 5,
+						type	= "description",
+						name	= L["1.0.2 Changelog"],
+					},
+					header3 = {
+							order = 6,
+							type = "header",
+							name = "1.0.1",
+					},
+					desc3 = {
+						order	= 7,
 						type	= "description",
 						name	= L["1.0.1 Changelog"],
 					},
@@ -205,6 +219,9 @@ function VocalRaidAssistant:OnDisable()
 
 end
 
+
+
+
 -- play sound by file name
 function VRA:PlaySound(fileName, extend)
 	PlaySoundFile("Interface\\Addons\\"..vradb.path.."\\"..fileName .. "." .. (extend or "ogg"), "Master")
@@ -220,6 +237,18 @@ end
 
 function VocalRaidAssistant:PLAYER_ENTERING_WORLD()
 	--CombatLogClearEntries()
+end
+
+function VocalRaidAssistant:isTankSpec(name)
+
+	for i=1,5 do
+		if GetInspectSpecialization(name)==tankSpecs[i] then
+			return true
+		end
+	end
+
+	return false
+	
 end
 
 -- play sound by spell id and spell type
@@ -247,6 +276,23 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	local timestamp,event,hideCaster,sourceGUID,sourceName,sourceFlags,sourceFlags2,destGUID,destName,destFlags,destFlags2,spellID,spellName= select ( 1 , ... );
 	if not VRA_EVENT[event] then return end
 	--print(playerName,sourceName,destName,destFlags,event,spellName,spellID)
+	--print(GetInspectSpecialization(destName))
+	--if GetInspectSpecialization(destName)==tankSpecs[2] then
+	--	print("test")
+	--end
+	
+	--if(test==0) then
+	--	for i=1, GetNumGroupMembers() do
+	--		name = GetRaidRosterInfo(i)
+	--		print(name)
+	--	end
+	--	test=1
+	--end
+	
+	--if(self:isTankSpec(destName)) then
+	--	print("TANK!!!!!")
+	--end
+	
 	if (destFlags) then
 		for k in pairs(VRA_TYPE) do
 			desttype[k] = CombatLog_Object_IsA(destFlags,k)
@@ -299,13 +345,61 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 	end
 	enddebug]]--
 	if (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_ME] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
-		self:PlaySpell("auraApplied", spellID)
+		if(vradb.onlyRaidGroup) then
+			if(UnitInRaid(destName) or UnitInParty(destName)) then
+				if(vradb.buffAppliedTank) then
+					if(self:isTankSpec(destName)) then
+						self:PlaySpell("auraApplied", spellID)
+					end
+				else
+					self:PlaySpell("auraApplied", spellID)
+				end
+			end
+		else
+			if(vradb.buffAppliedTank) then
+				if(self:isTankSpec(destName)) then
+					self:PlaySpell("auraApplied", spellID)
+				end
+			else
+				self:PlaySpell("auraApplied", spellID)
+			end
+		end
 	elseif (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
-		self:PlaySpell("auraApplied", spellID)
+		if(vradb.onlyRaidGroup) then
+			if(UnitInRaid(destName) or UnitInParty(destName)) then
+				if(vradb.buffAppliedTank) then
+					if(self:isTankSpec(destName)) then
+						self:PlaySpell("auraApplied", spellID)
+					end
+				else
+					self:PlaySpell("auraApplied", spellID)
+				end
+			end
+		else
+			if(vradb.buffAppliedTank) then
+				if(self:isTankSpec(destName)) then
+					self:PlaySpell("auraApplied", spellID)
+				end
+			else
+				self:PlaySpell("auraApplied", spellID)
+			end
+		end
 	elseif (event == "SPELL_AURA_REMOVED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.ronlyTF or destuid.target or destuid.focus) and not vradb.auraRemoved) then
-		self:PlaySpell("auraRemoved", spellID)
+		if(vradb.onlyRaidGroup) then
+			if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
+				self:PlaySpell("auraRemoved", spellID)
+			end
+		else
+			self:PlaySpell("auraRemoved", spellID)
+		end
 	elseif (event == "SPELL_CAST_START" and sourcetype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.conlyTF or sourceuid.target or sourceuid.focus) and not vradb.castStart) then
-		self:PlaySpell("castStart", spellID)
+		if(vradb.onlyRaidGroup) then
+			if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
+				self:PlaySpell("castStart", spellID)
+			end
+		else
+			self:PlaySpell("castStart", spellID)
+		end
 	elseif ((event == "SPELL_CAST_SUCCESS" or event == "SPELL_SUMMON") and sourcetype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.sonlyTF or sourceuid.target or sourceuid.focus) and not vradb.castSuccess) then
 		if self:Throttle(tostring(spellID).."default", 0.05) then return end
 		if (spellID == 42292 or spellID == 59752) and vradb.class and currentZoneType == "arena" then
@@ -314,10 +408,22 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				self:PlaySound(c);
 			end
 		else	
-			self:PlaySpell("castSuccess", spellID)
+			if(vradb.onlyRaidGroup) then
+				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
+					self:PlaySpell("castSuccess", spellID)
+				end
+			else
+				self:PlaySpell("castSuccess", spellID)
+			end
 		end
 	elseif (event == "SPELL_INTERRUPT" and desttype[COMBATLOG_FILTER_HOSTILE_PLAYERS] and not vradb.interrupt) then 
-		self:PlaySpell ("friendlyInterrupt", spellID)
+		if(vradb.onlyRaidGroup) then
+				if(UnitInRaid(sourceName) or UnitInParty(sourceName)) then
+					self:PlaySpell ("friendlyInterrupt", spellID)
+				end
+		else
+			self:PlaySpell ("friendlyInterrupt", spellID)
+		end
 	end
 	
 	-- play custom spells

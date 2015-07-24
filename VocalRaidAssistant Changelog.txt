@@ -1,3 +1,9 @@
+Version 1.0.3
+Added "Buffs on Tank only" feature
+Added "Only Check Raid Group" feature
+Added abilities:
+  - Iron Bark
+  - Vampiric Embrace
 Version 1.0.2
 Improved menu utility
 Removed Load Configuration and now load on default

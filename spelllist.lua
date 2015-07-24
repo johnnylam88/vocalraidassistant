@@ -4,6 +4,7 @@
 			--general
 			--druid
 			[29166] = "innervate",
+			[102342] = "ironbark",
 
 			--paladin
 			[1022] = "handOfProtection", 
@@ -64,6 +65,7 @@
 			[62618] = "barrier",
 			[32375] = "massdispel",
 			[113277] = "stranquility",
+			[15286] = "vampiricembrace",
 			--shaman
 			[16190] = "ManaTide",
 			[98008] = "spiritlinktotem",
