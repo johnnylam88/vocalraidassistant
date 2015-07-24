@@ -1,3 +1,13 @@
+Version 1.2.1
+Small logical bugfix so player will not hear own cast on tanks
+Added abilities:
+  - Nature's Vigil
+  - Guard
+  - Incarnation: Tree of Life
+  - Sacred Shield
+  - Eternal Flame
+  - Stoneform
+  - Mocking Banner
 Version 1.2
 Removed all bar features, and reverted back to the core of the addon.
 There are other addons that handle cooldown timers and bars, this addon will only handle vocal announcement from now on.

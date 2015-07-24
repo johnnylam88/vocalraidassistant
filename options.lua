@@ -686,6 +686,13 @@ function VRA:OnOptionCreate()
 						disabled = function() return vradb.aruaApplied end,
 						order = 1,
 						args = {
+							general = {
+								type = 'group',
+								inline = true,
+								name = L["General Abilities"],
+								order = 4,
+								args = listOption({20594},"auraApplied"),
+							},
 							dk	= {
 								type = 'group',
 								inline = true,
@@ -698,7 +705,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffFF7D0ADruid|r"],
 								order = 6,
-								args = listOption({102342,22812,61336,155835},"auraApplied"),	
+								args = listOption({102342,22812,61336,155835,33891},"auraApplied"),	
 							},
 							hunter = {
 								type = 'group',
@@ -719,14 +726,14 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cFF558A84Monk|r"],
 								order = 9,
-								args = listOption({116849,115203},"auraApplied"),
+								args = listOption({116849,115203,115295},"auraApplied"),
 							},
 							paladin = {
 								type = 'group',
 								inline = true,
 								name = L["|cffF58CBAPaladin|r"],
 								order = 10,
-								args = listOption({6940,1022,86659,31850,498,642,31842},"auraApplied"),
+								args = listOption({6940,1022,86659,31850,498,642,31842,148039,156322},"auraApplied"),
 							},
 							preist	= {
 								type = 'group',
@@ -855,7 +862,7 @@ function VRA:OnOptionCreate()
 								inline = true,
 								name = L["|cffC79C6EWarrior|r"],
 								order = 114,
-								args = listOption({97462,1160,64382},"castSuccess"),	
+								args = listOption({97462,1160,64382,114192},"castSuccess"),	
 							},
 						},
 					},

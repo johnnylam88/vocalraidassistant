@@ -122,6 +122,12 @@ local dbDefaults = {
 		ancestralguidance = false,
 		gorefiendsgrasp = false,
 		naturesvigil = false,
+		mockingbanner = false,
+		stoneform = false,
+		incarnationtree = false,
+		sacredshield = false,
+		eternalflame = false,
+		guard = false,
 		
 		custom = {},
 	}	
@@ -231,6 +237,16 @@ function VocalRaidAssistant:OnInitialize()
 						order = -700,
 						type = "description",
 						name = "Current version: " .. L["GET_VERSION"] .. "\n",
+					},
+					header14 = {
+							order = -28,
+							type = "header",
+							name = "1.2.1",
+					},
+					desc14 = {
+						order	= -27,
+						type	= "description",
+						name	= L["1.2.1 Changelog"],
 					},
 					header13 = {
 							order = -26,
@@ -505,6 +521,10 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 		VRA:bossWipe()
 	end
 	
+	if(spellID==123402) then
+		spellID = 115295 --To make improved guard equal to guard
+	end
+	
 	
 	if (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_ME] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
 		if(not vradb.buffAppliedSpecific) then
@@ -525,7 +545,7 @@ function VocalRaidAssistant:COMBAT_LOG_EVENT_UNFILTERED(event , ...)
 				self:PlaySpell("auraApplied", spellID)
 			end
 		end
-	elseif (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
+	elseif (event == "SPELL_AURA_APPLIED" and desttype[COMBATLOG_FILTER_FRIENDLY_UNITS] and not sourcetype[COMBATLOG_FILTER_ME] and (not vradb.aonlyTF or destuid.target or destuid.focus) and not vradb.aruaApplied) then
 		if(not vradb.buffAppliedSpecific) then
 			if(vradb.onlyRaidGroup) then
 				if((UnitInRaid(destName))~=nil or (UnitInParty(destName))~=false) then

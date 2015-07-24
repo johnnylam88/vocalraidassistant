@@ -2,11 +2,13 @@
 	return {
 		auraApplied ={					-- aura applied [spellid] = ".mp3 file name",
 			--general
+			[20594] = "stoneform",
 			--druid
 			[102342] = "ironbark",
 			[22812] = "barkskin",
 			[61336] = "survivalinstincts",
 			[155835] = "bristlingfur", --guardian
+			[33891] = "incarnationtree", --resto
 
 			--paladin
 			[1022] = "handOfProtection", 
@@ -16,6 +18,8 @@
 			[498] = "divineprotection",
 			[642] = "divineshield",
 			[31842] = "avengingwrath",
+			[148039] = "sacredshield",
+			[156322] = "eternalflame",
 			--rogue
 			[57934] = "tricksofthetrade",
 			--warrior
@@ -45,6 +49,7 @@
 			--monk
 			[115203] = "fortifyingbrew",
 			[116849] = "lifeCocoon",
+			[115295] = "guard",
 		},
 		auraRemoved = {					-- aura removed [spellid] = ".mp3 file name",
 			
@@ -73,6 +78,7 @@
 			[97462] = "rallyingCry", 
 			[1160] = "demoralizingshout",
 			[64382] = "shatteringthrow",
+			[114192] = "mockingbanner",
 			--priest
 			[64843] = "divineHymn",
 			[62618] = "barrier",
@@ -99,6 +105,9 @@
 			[20707] = "soulstone",
 			-- monk
 			[115310] = "Revival",
+			
+		
+			
 			
 		},
 		friendlyInterrupt = {			--friendly interrupt [spellid] = ".mp3 file name",
