@@ -1,0 +1,8 @@
+ChangeLog*
+CHANGELOG*
+*.tmp
+Libs/*
+!Libs/*.xml
+!Libs/SpecializedLibBars-1.0/
+release/**
+tmp/**
