@@ -20,5 +20,3 @@ enable-nolib-creation: no
 ignore:
     - release
     - tmp
-
-manual-changelog: VocalRaidAssistant Changelog.txt
